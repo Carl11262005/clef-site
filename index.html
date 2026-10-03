@@ -57,6 +57,8 @@
   body[data-aud="venue"] .aud-musician { display: none !important; }
   body[data-aud="musician"] .aud-venue { display: none !important; }
 </style>
+<link rel="stylesheet" href="assets/early-access.css" />
+<script type="module" src="assets/early-access.mjs"></script>
 </head>
 <body class="min-h-screen bg-white text-gray-900" data-aud="venue">
 
@@ -583,20 +585,17 @@
       <p class="text-xl text-white/90 mb-6 max-w-2xl mx-auto leading-relaxed">Be the first to know when CLEF opens up.</p>
       <p class="text-3xl lg:text-4xl text-white mb-12 max-w-2xl mx-auto leading-tight font-semibold tracking-tight italic">Book with confidence. <span class="text-orange-100">Play with passion.</span></p>
 
-      <form id="signupForm" class="max-w-xl mx-auto">
-        <div class="flex flex-col gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 w-full max-w-md mx-auto">
-          <button type="button" class="flex items-center justify-center gap-2 h-14 w-full bg-white text-orange-500 rounded-xl shadow-lg hover:bg-gray-100 transition">
-            <img src="https://www.google.com/favicon.ico" alt="Google Icon" class="w-6 h-6" />
-            Sign in with Google
-          </button>
-          <div class="text-white/60 text-center font-semibold">OR</div>
-          <div class="flex gap-4 w-full">
-            <input id="emailInput" type="email" placeholder="Enter your email" required class="flex-1 h-14 px-4 rounded-lg bg-transparent border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50" />
-            <button type="submit" class="h-14 bg-white text-orange-500 hover:bg-gray-100 px-10 rounded-lg shadow-lg font-medium">Sign Up</button>
-          </div>
-        </div>
-        <p id="submittedMsg" class="mt-6 text-white text-lg hidden">Thanks! We'll be in touch soon. 🎉</p>
-      </form>
+      <div id="earlyAccess">
+        <button id="googleSignup" type="button" disabled aria-describedby="signupConsent signupStatus">
+          <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="" />
+          Sign up with Google
+        </button>
+        <p class="signup-divider">or use your email</p>
+        <div id="kitSignup"><script async data-uid="c338b66b93" src="https://clef.kit.com/c338b66b93/index.js"></script></div>
+        <p id="signupFallback">Loading signup… If it does not appear, <a href="https://clef.kit.com/c338b66b93">open the signup form</a>.</p>
+        <p id="signupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+        <p id="signupConsent" class="signup-consent">By signing up with email or Google, you agree to receive CLEF early-access updates through Kit. Unsubscribe anytime. No extra email confirmation is needed.</p>
+      </div>
       <p class="mt-8 text-white/70">No spam, ever. Unsubscribe at any time.</p>
     </div>
   </section>
@@ -773,15 +772,6 @@
       menuToggle.innerHTML = '<i data-lucide="menu" class="h-6 w-6"></i>';
       lucide.createIcons();
     }));
-
-    // Signup form
-    document.getElementById('signupForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const msg = document.getElementById('submittedMsg');
-      msg.classList.remove('hidden');
-      document.getElementById('emailInput').value = '';
-      setTimeout(() => msg.classList.add('hidden'), 3000);
-    });
 
     // Hero audience toggle
     const audCopy = {
