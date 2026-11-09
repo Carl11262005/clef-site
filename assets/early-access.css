@@ -29,3 +29,23 @@
 #earlyAccess:has(.formkit-alert-success:not(:empty)) #signupStatus,
 #earlyAccess:has(.formkit-alert-success:not(:empty)) .signup-consent { display: none; }
 @media (max-width: 380px) { #earlyAccess { padding: 18px; } #googleSignup { font-size: 13px; } }
+
+/* Role and location enhancement; existing live styling stays intact. */
+#earlyAccess[data-signup-enhanced="true"] [data-clef-metadata="true"] { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
+
+.signup-wizard h3 { margin: 6px 0 22px; color: #fff; font-size: clamp(24px, 3vw, 32px); line-height: 1.2; }
+.signup-progress { margin: 0 0 12px; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: .03em; }
+.signup-role-grid { display: grid; gap: 10px; }
+.signup-role-grid button { min-height: 58px; padding: 12px 16px; border: 1px solid #ffffff70; border-radius: 13px; background: #fff; color: #9a3d08; font-size: 16px; font-weight: 700; cursor: pointer; text-align: left; transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease; }
+.signup-role-grid button::after { content: '→'; float: right; font-size: 20px; }
+.signup-role-grid button[aria-pressed="true"] { background: #fff1e4; box-shadow: inset 0 0 0 2px #f97316; }
+.signup-wizard label { display: block; margin-bottom: 9px; color: #fff; font-size: 16px; font-weight: 700; }
+.signup-wizard [data-signup-location] { width: 100%; min-height: 56px; padding: 12px 15px; border: 2px solid transparent; border-radius: 12px; background: #fff; color: #111827; font-size: 16px; }
+.signup-wizard [data-signup-location]:focus { border-color: #111827; outline: none; }
+.signup-field-error { min-height: 24px; margin: 8px 0 0; color: #fff; font-size: 14px; font-weight: 600; }
+.signup-step-actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 14px; }
+.signup-step-actions button, .signup-back-final { min-height: 50px; padding: 10px 18px; border: 1px solid #ffffff80; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.signup-step-actions [data-signup-back], .signup-back-final { background: transparent; color: #fff; }
+.signup-step-actions [data-signup-continue] { background: #fff; color: #c54808; }
+.signup-back-final { width: 100%; margin-top: 14px; }
+@media (hover:hover) and (prefers-reduced-motion:no-preference) { .signup-role-grid button:hover { transform: translateY(-2px); box-shadow: 0 8px 18px #8b310829; } }

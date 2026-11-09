@@ -1,6 +1,6 @@
 // Authentication and subscription are separate results. Never claim a signup
 // succeeded until Kit has acknowledged it.
-export function createGoogleSignup({ authenticate, subscribe, notify, setBusy }) {
+export function createGoogleSignup({ authenticate, subscribe, getSignupDetails = () => ({}), notify, setBusy }) {
   let busy = false;
   let complete = false;
   return async function signup() {
@@ -8,13 +8,15 @@ export function createGoogleSignup({ authenticate, subscribe, notify, setBusy })
     busy = true;
     setBusy(true);
     try {
+      const details = getSignupDetails();
+      if (details === null) throw new Error('Choose your role and location before continuing with Google.');
       notify('Choose your Google account to join the early-access list.');
       const user = await authenticate();
       if (!user?.email || !user.emailVerified || !user.providerData?.some(provider => provider.providerId === 'google.com')) {
         throw new Error('We could not get a verified Google email. Please use email signup below.');
       }
       notify('Google sign-in complete. Adding you to the early-access list…');
-      await subscribe(user.email);
+      await subscribe({email: user.email, ...details});
       complete = true;
       notify('You’re on the CLEF early-access list! No extra confirmation is needed.');
     } catch (error) {

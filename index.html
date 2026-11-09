@@ -57,8 +57,8 @@
   body[data-aud="venue"] .aud-musician { display: none !important; }
   body[data-aud="musician"] .aud-venue { display: none !important; }
 </style>
-<link rel="stylesheet" href="assets/early-access.css" />
-<script type="module" src="assets/early-access.mjs"></script>
+<link rel="stylesheet" href="assets/early-access.css?v=20261108-role-tracking" />
+<script type="module" src="assets/early-access.mjs?v=20261108-role-tracking"></script>
 </head>
 <body class="min-h-screen bg-white text-gray-900" data-aud="venue">
 
@@ -585,7 +585,13 @@
       <p class="text-xl text-white/90 mb-6 max-w-2xl mx-auto leading-relaxed">Be the first to know when CLEF opens up.</p>
       <p class="text-3xl lg:text-4xl text-white mb-12 max-w-2xl mx-auto leading-tight font-semibold tracking-tight italic">Book with confidence. <span class="text-orange-100">Play with passion.</span></p>
 
-      <div id="earlyAccess">
+      <div id="earlyAccess" data-signup-wizard data-page-role="">
+<div class="signup-wizard" hidden>
+          <p class="signup-progress" data-signup-progress>Step 1 of 3</p>
+          <section data-signup-step="1" aria-labelledby="signup-role-title"><h3 id="signup-role-title">First, choose your side.</h3><div class="signup-role-grid"><button type="button" data-signup-role="venue">Venue / Booking Manager</button><button type="button" data-signup-role="musician">Musician</button><button type="button" data-signup-role="band">Band</button></div></section>
+          <section data-signup-step="2" aria-labelledby="signup-location-title" hidden><h3 id="signup-location-title">Where are you based?</h3><label for="signupLocation">City + State/Region</label><input id="signupLocation" data-signup-location type="text" maxlength="100" autocomplete="address-level2" placeholder="Pittsburgh, PA"><p class="signup-field-error" data-signup-error role="alert"></p><div class="signup-step-actions"><button type="button" data-signup-back>Back</button><button type="button" data-signup-continue>Continue</button></div></section>
+        </div>
+        <div data-signup-final>
         <button id="googleSignup" type="button" disabled aria-describedby="signupConsent signupStatus">
           <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="" />
           Sign up with Google
@@ -595,7 +601,8 @@
         <p id="signupFallback">Loading signup… If it does not appear, <a href="https://clef.kit.com/c338b66b93">open the signup form</a>.</p>
         <p id="signupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
         <p id="signupConsent" class="signup-consent">By signing up with email or Google, you agree to receive CLEF early-access updates through Kit. Unsubscribe anytime. No extra email confirmation is needed.</p>
-      </div>
+      </div><button class="signup-back-final" type="button" data-signup-back hidden>Back</button>
+</div>
       <p class="mt-8 text-white/70">No spam, ever. Unsubscribe at any time.</p>
     </div>
   </section>
