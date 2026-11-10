@@ -3,6 +3,9 @@ import {createSignupState, isExpandedKitSchema, ROLE_TAGS} from './signup-wizard
 
 const root=document.getElementById('earlyAccess'), googleButton=document.getElementById('googleSignup'), status=document.getElementById('signupStatus'), kitContainer=document.getElementById('kitSignup'), fallback=document.getElementById('signupFallback');
 const wizard=root?.querySelector('.signup-wizard'), finalPanel=root?.querySelector('[data-signup-final]'), progress=root?.querySelector('[data-signup-progress]'), locationInput=root?.querySelector('[data-signup-location]'), fieldError=root?.querySelector('[data-signup-error]'), finalBack=root?.querySelector('.signup-back-final');
+const flowHeader=root?.querySelector('[data-signup-header]'), summary=root?.querySelector('[data-signup-summary]'), finalTitle=root?.querySelector('[data-signup-final-title]');
+const roleLabels={venue:'Venue / Booking Manager',musician:'Musician',band:'Band'};
+let stepTransition;
 const state=createSignupState({role:root?.dataset.pageRole||null});
 let enhanced=false, authReady=false, googleBusy=false, emailBusy=false, allowGoogleSubmission=false, subscribed=false, emailTimer;
 const notify=message=>{if(status)status.textContent=message;};
@@ -34,34 +37,48 @@ function syncKit(details=state.details()){
   let matched=false; controls.roleChoices.forEach(control=>{const selected=controlRole(control)===details.role;control.checked=selected;control.dispatchEvent(new Event('change',{bubbles:true}));if(selected)matched=true;});return matched;
 }
 function renderWizard(focus=false){
-  if(!enhanced)return; const snapshot=state.snapshot(); progress.textContent=`Step ${snapshot.step} of 3`;
+  if(!enhanced||subscribed)return; const snapshot=state.snapshot(); progress.textContent=`Step ${snapshot.step} of 3`;
+  root.dataset.signupStage=String(snapshot.step); if(flowHeader)flowHeader.hidden=false;
+  root.querySelectorAll('[data-signup-marker]').forEach(marker=>{const step=Number(marker.dataset.signupMarker);marker.dataset.state=step<snapshot.step?'complete':step===snapshot.step?'current':'upcoming';});
   wizard.querySelectorAll('[data-signup-step]').forEach(panel=>{panel.hidden=Number(panel.dataset.signupStep)!==snapshot.step;});
   wizard.hidden=snapshot.step===3; finalPanel.hidden=snapshot.step!==3; finalBack.hidden=snapshot.step!==3;
   root.querySelectorAll('[data-signup-role]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.signupRole===snapshot.role)));
-  if(snapshot.location&&locationInput.value!==snapshot.location)locationInput.value=snapshot.location;
-  if(focus)(snapshot.step===1?root.querySelector('[data-signup-role]'):snapshot.step===2?locationInput:googleButton)?.focus({preventScroll:true});
+  if(finalTitle)finalTitle.textContent='You’re Almost In.';
+  if(summary){summary.hidden=snapshot.step!==3;summary.querySelector('[data-signup-summary-role]').textContent=roleLabels[snapshot.role]||'';summary.querySelector('[data-signup-summary-location]').textContent=snapshot.location;}
+  stepTransition?.cancel();
+  const panel=snapshot.step===3?finalPanel:wizard.querySelector(`[data-signup-step="${snapshot.step}"]`);
+  if(focus&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches&&panel.animate)stepTransition=panel.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:180,easing:'cubic-bezier(.22,1,.36,1)'});
+  if(focus)(snapshot.step===1?root.querySelector(`[data-signup-role="${snapshot.role||'venue'}"]`):snapshot.step===2?locationInput:emailField()||finalTitle)?.focus({preventScroll:true});
 }
 function activateWizard(){
-  const controls=kitMetadataControls(); if(enhanced||!controls)return;
+  const controls=kitMetadataControls(); if(enhanced||!controls||!wizard)return;
   enhanced=true;root.dataset.signupEnhanced='true';
   [controls.location,controls.roleSelect,...controls.roleChoices].filter(Boolean).forEach(control=>{
-    (control.closest('[data-element],.formkit-field,.formkit-fieldset')||control).dataset.clefMetadata='true';
+    const field=control.closest('[group="field"],.formkit-field,.formkit-fieldset')||control.closest('[data-element]')||control;
+    field.dataset.clefMetadata='true';field.setAttribute('aria-hidden','true');control.tabIndex=-1;
   });
   wizard.hidden=false;renderWizard();
 }
-root?.querySelectorAll('[data-signup-role]').forEach(button=>button.addEventListener('click',()=>{fieldError.textContent='';state.selectRole(button.dataset.signupRole);renderWizard(true);}));
-root?.querySelector('[data-signup-continue]')?.addEventListener('click',()=>{const result=state.continueWithLocation(locationInput.value);fieldError.textContent=result.message;if(result.ok){syncKit();renderWizard(true);}});
+root?.querySelectorAll('[data-signup-role]').forEach(button=>button.addEventListener('click',()=>{if(googleBusy||emailBusy||subscribed)return;fieldError.textContent='';state.selectRole(button.dataset.signupRole);renderWizard(true);}));
+root?.querySelector('[data-signup-continue]')?.addEventListener('click',()=>{if(googleBusy||emailBusy||subscribed)return;const result=state.continueWithLocation(locationInput.value);fieldError.textContent=result.message;locationInput.setAttribute('aria-invalid',String(!result.ok));if(result.ok){locationInput.value=state.snapshot().location;syncKit();renderWizard(true);}});
 locationInput?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();root.querySelector('[data-signup-continue]').click();}});
-root?.querySelectorAll('[data-signup-back]').forEach(button=>button.addEventListener('click',()=>{state.back();fieldError.textContent='';renderWizard(true);}));
+root?.querySelectorAll('[data-signup-back]').forEach(button=>button.addEventListener('click',()=>{if(googleBusy||emailBusy||subscribed)return;state.back();fieldError.textContent='';locationInput.removeAttribute('aria-invalid');renderWizard(true);}));
+root?.querySelector('[data-signup-edit]')?.addEventListener('click',()=>{if(googleBusy||emailBusy||subscribed)return;state.goTo(1);renderWizard(true);});
 
 function updateControls(){
   const input=emailField(), formReady=Boolean(input); if(input){input.type='email';input.autocomplete='email';input.setAttribute('aria-label','Email address');}
   activateWizard(); if(kitSucceeded()){subscribed=true;state.markSubscribed();} fallback.hidden=formReady||subscribed; googleButton.disabled=!authReady||!formReady||googleBusy||emailBusy||subscribed;
-  if(subscribed){googleButton.hidden=true;root.querySelector('.signup-divider').hidden=true;}
+  const busy=googleBusy||emailBusy;
+  root.querySelectorAll('[data-signup-role],[data-signup-back],[data-signup-continue],[data-signup-edit]').forEach(button=>{button.disabled=busy||subscribed;});
+  if(locationInput)locationInput.readOnly=busy;
+  if(subscribed){
+    root.dataset.signupComplete='true';stepTransition?.cancel();googleButton.hidden=true;root.querySelector('.signup-divider').hidden=true;
+    if(enhanced){wizard.hidden=true;finalPanel.hidden=false;finalBack.hidden=true;if(flowHeader)flowHeader.hidden=true;if(summary)summary.hidden=true;if(finalTitle)finalTitle.parentElement.hidden=true;}
+  }
 }
 new MutationObserver(updateControls).observe(kitContainer,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style']});updateControls();
 kitContainer.addEventListener('submit',event=>{
-  if(googleBusy&&!allowGoogleSubmission){event.preventDefault();event.stopImmediatePropagation();return;}
+  if(subscribed||emailBusy||(googleBusy&&!allowGoogleSubmission)){event.preventDefault();event.stopImmediatePropagation();return;}
   if(enhanced&&(!state.details()||!syncKit())){event.preventDefault();event.stopImmediatePropagation();notify('Choose your role and location before joining.');return;}
   emailBusy=true;clearTimeout(emailTimer);emailTimer=setTimeout(()=>{if(emailBusy&&!googleBusy)notify('We could not confirm your signup yet. Check your inbox, then reload this page if you need to try again.');},30000);notify('Sending your signup…');updateControls();
 },true);

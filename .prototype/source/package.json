@@ -1,0 +1,1 @@
+{"name":"clef-conference-real-app","version":"1.0.0","private":true,"main":"expo-router/entry","dependencies":{"expo":"~55.0.30","expo-router":"~55.0.18","react":"19.2.0","react-dom":"19.2.0","react-native":"0.83.10","react-native-web":"~0.21.0"}}

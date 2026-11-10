@@ -1,0 +1,7 @@
+{
+  "commit": "edf7d3dfd2845566aa49d20359e5411b826278ca",
+  "verifiedOn": "2026-11-02",
+  "iosUpdateGroup": "5c119f15-a39b-4c8e-8f6a-90da6cda540e",
+  "androidUpdateGroup": "52efa8fd-28d2-40ae-a742-2c4d831c836a",
+  "note": "Both production EAS update records identify this commit. Reverify before changing this pin."
+}

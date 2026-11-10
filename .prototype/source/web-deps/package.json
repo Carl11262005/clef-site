@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@lottiefiles/dotlottie-react": "0.21.1",
+    "maplibre-gl": "6.16.0"
+  },
+  "devDependencies": {
+    "@types/react-dom": "19.2.2"
+  }
+}

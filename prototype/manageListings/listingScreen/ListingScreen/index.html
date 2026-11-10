@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://tiles.openfreemap.org; worker-src 'self' blob:; media-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"><meta name="theme-color" content="#f8f6f1"><meta name="referrer" content="no-referrer"><meta name="description" content="Explore CLEF's real app with sample data. No signup, no real changes.">
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>CLEF Prototype</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  <link rel="preload" href="/prototype/_expo/static/css/maplibre-gl-dc3f9f1339c2c312db0e4c8f314a98f9.css" as="style"><link rel="stylesheet" href="/prototype/_expo/static/css/maplibre-gl-dc3f9f1339c2c312db0e4c8f314a98f9.css"><link rel="preload" href="/prototype/_expo/static/css/entry-8ea7b8ad1edf6d23a8930b5bd414b26c.css" as="style"><link rel="stylesheet" href="/prototype/_expo/static/css/entry-8ea7b8ad1edf6d23a8930b5bd414b26c.css"><link rel="preload" href="/prototype/_expo/static/css/guide-66d0c0f54d1855be5d6747546345e06d.css" as="style"><link rel="stylesheet" href="/prototype/_expo/static/css/guide-66d0c0f54d1855be5d6747546345e06d.css"><style>
+html,body{background:#f8f6f1}
+.conference-loading{box-sizing:border-box;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px;background:#f8f6f1;color:#111;text-align:center;font-family:Arial,sans-serif}.conference-loading strong{font-size:44px;letter-spacing:-2px;color:#a04400}.conference-loading p{font-size:20px;margin:28px 0 10px}.conference-loading small{font-size:13px;color:#625b52}.conference-loading a{font-size:12px;color:#8e3d00;margin-top:28px;min-height:44px;display:flex;align-items:center}
+.conference-tabs{display:flex;flex-direction:column;flex:1;min-height:0;position:relative}
+.conference-tab-panel{display:flex;flex:1;min-height:0}.conference-tab-panel[data-state="inactive"]{display:none}
+.conference-tabbar{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:12px;right:12px;display:flex;padding:5px;background:rgba(255,251,246,.95);backdrop-filter:blur(20px);border:1px solid #e7dfd5;border-radius:30px;box-shadow:0 4px 24px #0002;z-index:10}
+.conference-tab{flex:1;min-width:0;border:0;background:none;padding:7px 2px;border-radius:24px;display:flex;flex-direction:column;align-items:center;gap:3px;font:10px Arial;color:#6c655d;cursor:pointer;position:relative}
+.conference-tab[data-state="active"]{color:#c45100;background:#ffeddf}.conference-tab:focus-visible{outline:2px solid #111}.conference-tab-badge{position:absolute;right:4px;top:0;background:#ff6f00;color:#111;border-radius:12px;padding:2px 5px}
+[aria-modal="true"]{padding-top:var(--conference-top,44px)!important;box-sizing:border-box}
+</style><style>.conference-loading,.conference-splash{position:fixed;inset:0;width:100%;height:100dvh;min-height:100dvh;z-index:2147483647}.conference-loading{background:#FF6F00}.conference-splash{pointer-events:none}.conference-loading strong{color:white;font-size:58px;letter-spacing:6px}.conference-loading a{color:white;position:absolute;bottom:24px}html:has(.conference-loading),body:has(.conference-loading){background:#FF6F00}</style></head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"><main class="conference-loading" aria-label="Loading CLEF"><strong>CLEF</strong><a href="/prototype/demo/">Reload if loading stalls</a></main></div>
+  <script type="module" src="/prototype/bootstrap.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        ".source/frontend/*"
+      ],
+      "clef-conference-musician-flow": [
+        "./guidance/musicianFlow.ts"
+      ],
+      "maplibre-gl": [
+        "./web-deps/node_modules/maplibre-gl"
+      ],
+      "react-dom": [
+        "./web-deps/node_modules/@types/react-dom"
+      ],
+      "@radix-ui/react-tabs": [
+        ".source/frontend/node_modules/expo-router/node_modules/@radix-ui/react-tabs"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "baseUrl": "."
+  },
+  "exclude": [
+    "node_modules",
+    "web-deps",
+    "output", ".source"
+  ]
+}

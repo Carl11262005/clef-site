@@ -1,14 +1,61 @@
-Deploying the new CLEF site to Firebase Hosting
-================================================
+CLEF Website
+============
 
-1. Unzip this folder.
-2. In a terminal, cd into it (the folder containing firebase.json).
-3. If you don't have the Firebase CLI: npm i -g firebase-tools
-4. firebase login   (one time)
-5. firebase deploy
+Static marketing website for CLEF, connecting venues with musicians and bands.
+Live website: https://clefapp.net/
 
-That's it — index.html is served as the site root, with assets/ alongside it.
+Pages
+-----
+/                  Homepage and early-access signup
+/venues/           Venue introduction and interactive prototype
+/musicians/        Musician/band introduction and interactive prototype
+/about/            Mission and founder's note
+/privacy/          Existing privacy information
+/delete-account/   Existing account-deletion information
 
-To preview on a real phone before going fully live, use a preview channel instead of step 5:
-  firebase hosting:channel:deploy preview
-This gives you a temporary URL to open in Safari on your iPhone.
+Local preview
+-------------
+From the repository root:
+  python3 -m http.server 4175 --bind 127.0.0.1
+Open http://127.0.0.1:4175/
+
+The website is HTML, CSS, and browser JavaScript. No frontend build is required.
+The committed prototype/ directory is the browser-ready demo export. Editable
+prototype source and reproducible integration instructions are in .prototype/.
+The prototype uses sample data, never a production app session. Its read-only
+map uses OpenFreeMap tiles. Production Firebase/axios transports are excluded
+by the prototype build's source audit.
+
+Signup
+------
+The current Kit form remains the source of truth for subscription success.
+Website signup asks for venue/musician/band role and city/state, then email or
+Google. Do not change the Kit form schema, auth configuration, or automation
+without checking assets/early-access.mjs and its controlled integration tests.
+A localhost page still uses the real Kit form unless intercepted by a test.
+Never submit a live test subscriber without authorization.
+
+Validation
+----------
+Tests are under .tests/. Browser checks use Playwright, which must be available
+to Node. Run:
+  node --test --test-concurrency=1 .tests/*.test.mjs
+If using a separately installed Playwright runtime, set NODE_PATH to its
+node_modules directory. Tests use reserved fixture identities, not live signups.
+
+Publishing
+----------
+Hosting is Firebase project/site clef-app. The existing GitHub Actions workflow
+publishes pushes to main. Verify its run after a push; a pushed commit by itself
+is not deployment proof. If the configured deployment service account lacks
+permission, the workflow will fail until its owner repairs that access.
+
+An authorized maintainer with an existing Firebase CLI login can publish the
+exact committed snapshot using:
+  firebase deploy --only hosting --project clef-app --non-interactive
+
+Keep hidden source, tests, Git metadata, and local review evidence excluded from
+Hosting. firebase.json explicitly ignores hidden directories and node_modules.
+After publishing, verify the live HTML/assets match the intended commit.
+
+Local review screenshots and test subscriber records are not release artifacts.

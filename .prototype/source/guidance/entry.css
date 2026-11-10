@@ -1,0 +1,9 @@
+/* Structural web accessibility only. Visuals come from the released RN app. */
+.released-welcome,.released-entry{display:flex;flex:1;min-height:0;flex-direction:column;background:#fff;outline:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.released-welcome{min-height:0;height:100dvh;overflow-y:auto}.released-welcome>div{min-height:650px}
+.welcome-button{width:100%;cursor:pointer;border-radius:20px;outline-offset:5px}
+.released-entry .welcome-button{flex:1;min-width:0;margin:0 auto;max-width:480px}
+@media(max-height:650px){[data-testid="demo-entry-steps"]>div{min-height:64px!important;padding-top:10px!important;padding-bottom:10px!important;gap:14px!important}[data-testid="demo-entry-steps"]>div>div:first-child{width:40px!important;height:40px!important;border-radius:13px!important}}
+.welcome-button:focus-visible,.released-entry [role="radio"]:focus-visible,.released-entry [data-testid="onboarding-continue"]:focus-visible,.entry-contact:focus-visible{outline:3px solid #5A2C00;outline-offset:3px}
+.entry-contact{font:600 13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#B34C00;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:3px}
+@media(prefers-reduced-motion:reduce){.released-welcome *,.released-entry *{animation:none!important;transition:none!important}}

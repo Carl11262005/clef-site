@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CLEF Demo — 200% Text Fixture</title><link rel="stylesheet" href="/assets/website.css"><link rel="stylesheet" href="/assets/venue-demo.css?v=20261015-static-guide"><style>body{margin:0;padding:16px}#result{padding:16px;overflow-wrap:anywhere}main{max-width:1120px;margin:auto}</style></head><body><p id="result">Checking enlarged text…</p><main id="host"></main><script type="module">
+const check=(ok,message)=>{if(!ok)throw Error(message);};
+const failures=[];
+function doubleText(node){
+ const sizes=[node,...node.querySelectorAll('*')].filter(n=>n.namespaceURI!=='http://www.w3.org/2000/svg').map(n=>[n,getComputedStyle(n).fontSize,getComputedStyle(n).lineHeight]);
+ for(const [n,size,line] of sizes){const expected=parseFloat(size)*2;n.style.setProperty('font-size',expected+'px','important');if(line!=='normal')n.style.setProperty('line-height',parseFloat(line)*2+'px','important');if(Math.abs(parseFloat(getComputedStyle(n).fontSize)-expected)>.1)failures.push(n.className||n.tagName);}
+}
+async function run(){
+ const page=new DOMParser().parseFromString(await(await fetch('/venues/',{cache:'no-store'})).text(),'text/html');
+ const root=document.importNode(page.querySelector('[data-venue-demo]'),true);root.removeAttribute('data-venue-demo');document.querySelector('#host').append(root);
+ const {initVenueDemo,renderVenueDemo}=await import(page.querySelector('script[src*="venue-demo.mjs"]').getAttribute('src'));
+ const controller=initVenueDemo(root,{win:{matchMedia:()=>({matches:true})},render:(...args)=>{const result=renderVenueDemo(...args);doubleText(result.screen);return result;}});
+ check(controller,'Enlarged-text controller initialized');
+ for(const selector of ['.venue-demo-section-heading','.venue-demo-journey','.venue-demo-guide','.venue-demo-preview-note'])doubleText(root.querySelector(selector));
+ const actions=['START','OPEN_CALENDAR','SELECT_DAY','OPEN_DATE_SHEET','SELECT_NIGHT','CONFIRM_DATE','OPEN_PIPELINE','OPEN_ARTIST','ACCEPT_ARTIST','OPEN_MESSAGE','SEND_MESSAGE','OPEN_TERMS','SEND_TERMS','SIMULATE_ACCEPTANCE'];
+ for(const type of actions){
+  controller.dispatch({type,...(type==='SELECT_DAY'?{dateKey:controller.getState().dateKey}:{})});
+  const app=root.querySelector('.venue-demo-app'),body=root.querySelector('.venue-demo-app-scroll');
+  const screen=controller.getState().screen;
+  check(document.documentElement.scrollWidth<=innerWidth&&app.scrollWidth<=app.clientWidth,'No horizontal overflow: '+screen);
+  check(body.getBoundingClientRect().height>=40,'Reading area remains reachable: '+screen);
+  if(body.classList.contains('venue-demo-sheet-body')){
+   const sheet=body.querySelector('.venue-demo-card');body.scrollTop=0;
+   check(sheet.getBoundingClientRect().top>=body.getBoundingClientRect().top-1,'Sheet start reachable: '+screen);
+   body.scrollTop=body.scrollHeight-body.clientHeight;
+   check(sheet.lastElementChild.getBoundingClientRect().bottom<=body.getBoundingClientRect().bottom+1,'Sheet end reachable: '+screen);
+  }
+ }
+ check(failures.length===0,'Exact doubled font sizes: '+failures.join(', '));
+ document.querySelector('#result').textContent='PASS: asserted 200% text sizes through the full guided journey, reachable date sheets, no clipped reading area or horizontal overflow. Controlled fixture, not browser zoom.';
+}
+run().catch(e=>{document.querySelector('#result').textContent='FAIL: '+e.message;});
+</script></body></html>

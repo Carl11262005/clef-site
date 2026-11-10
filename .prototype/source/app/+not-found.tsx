@@ -1,0 +1,3 @@
+import { View, Text, Pressable } from 'react-native';
+import { router } from 'expo-router';
+export default function NotIncluded(){return <View style={{flex:1,justifyContent:'center',padding:28,gap:20}}><Text style={{fontSize:24,fontWeight:'700'}}>This part needs a real CLEF account.</Text><Text>The conference demo uses sample data. No changes were made.</Text><Pressable accessibilityRole="button" onPress={()=>router.canGoBack()?router.back():router.replace('/')} style={{padding:16,backgroundColor:'#FF6F00',borderRadius:14}}><Text style={{fontWeight:'700'}}>Back to the demo</Text></Pressable></View>;}

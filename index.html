@@ -1,828 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CLEF — Book Live Music. No Chaos.</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          display: ['Cormorant', 'Georgia', 'serif'],
-        },
-      },
-    },
-  };
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Cormorant:wght@500;600;700&display=swap" rel="stylesheet" />
-<script src="https://unpkg.com/lucide@1.42.0/dist/umd/lucide.min.js" integrity="sha384-6iubYQdnDKKax7YtOjFSSi3x8ZRw2rgZr8PdNjb56NHcsqU/cianmC4qplDP920g" crossorigin="anonymous"></script>
-<style>
-  html { scroll-behavior: smooth; font-family: 'Poppins', system-ui, sans-serif; }
-  body { -webkit-font-smoothing: antialiased; }
-  section[id] { scroll-margin-top: 5rem; }
-
-  @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  @keyframes scroll-right { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-  .animate-scroll-left { animation: scroll-left 40s linear infinite; }
-  .animate-scroll-right { animation: scroll-right 40s linear infinite; }
-  .animate-scroll-left:hover, .animate-scroll-right:hover { animation-play-state: paused; }
-
-  @keyframes slide-up { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-  .animate-slide-up { animation: slide-up 0.8s ease-out forwards; }
-
-  @keyframes text-shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-  .animate-text-shimmer { background-size: 200% auto; animation: text-shimmer 3s linear infinite; }
-
-  @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-  .animate-float { animation: float 3s ease-in-out infinite; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .stagger-children > * { opacity: 0; animation: slide-up 0.6s ease-out forwards; }
-    .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
-    .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
-    .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
-    .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
-
-    /* Reveal-on-scroll */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease-out, transform .7s ease-out; }
-  }
-  .reveal.in { opacity: 1; transform: translateY(0); }
-
-  /* Audience modes — toggle flips body[data-aud] */
-  body[data-aud="venue"] .aud-musician { display: none !important; }
-  body[data-aud="musician"] .aud-venue { display: none !important; }
-</style>
-<link rel="stylesheet" href="assets/early-access.css?v=20261108-role-tracking" />
-<script type="module" src="assets/early-access.mjs?v=20261108-role-tracking"></script>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEF — Good Music. Better Connections.</title><meta name="description" content="Connect with musicians, bands, and venues. Discover CLEF and join the early-access list for a simpler way to organize live music.">
+<link rel="canonical" href="https://clefapp.net/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="CLEF"><meta property="og:title" content="CLEF — Good Music. Better Connections."><meta property="og:description" content="Connect with musicians, bands, and venues. Discover CLEF and join the early-access list for a simpler way to organize live music."><meta property="og:url" content="https://clefapp.net/"><meta property="og:image" content="https://clefapp.net/assets/clefapp-logo.jpg"><meta property="og:image:alt" content="CLEF logo">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="CLEF — Good Music. Better Connections."><meta name="twitter:description" content="Connect with musicians, bands, and venues. Discover CLEF and join the early-access list for a simpler way to organize live music."><meta name="twitter:image" content="https://clefapp.net/assets/clefapp-logo.jpg">
+<meta name="theme-color" content="#F97316">
+<link rel="icon" type="image/png" href="/assets/clef-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/website.css?v=20261110-more-bubbles"><link rel="stylesheet" href="/assets/early-access.css?v=20261108-clean-signup-v2">
+<script type="module" src="/assets/navigation.mjs"></script><script type="module" src="/assets/background-bubbles.mjs?v=20261110-more"></script><script type="module" src="/assets/early-access.mjs?v=20261108-clean-signup-v2"></script>
+<script type="module" src="/assets/performance-video.mjs"></script>
+<script type="module" src="/assets/scroll-story.mjs?v=20261024-solid-scenes"></script>
+<script type="module" src="/assets/parallax.mjs?v=20261024"></script>
 </head>
-<body class="min-h-screen bg-white text-gray-900" data-aud="venue">
-
-  <template id="__bundler_thumbnail">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-      <rect width="100" height="100" fill="#fb923c"/>
-      <text x="50" y="68" font-family="Poppins, sans-serif" font-size="46" font-weight="700" fill="#fff" text-anchor="middle">C</text>
-    </svg>
-  </template>
-
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-400 backdrop-blur-lg z-50 shadow-lg shadow-orange-400/30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-20">
-        <div class="flex items-center gap-3">
-          <img src="assets/clef-logo.png" alt="CLEF Logo" class="h-10 w-10" />
-          <span class="text-2xl tracking-tight text-white">CLEF</span>
-        </div>
-        <div class="hidden md:flex items-center gap-8">
-          <a href="#problem" class="text-white font-semibold hover:text-white/80 transition-colors">Problem</a>
-          <a href="#solution" class="text-white font-semibold hover:text-white/80 transition-colors">Solution</a>
-          <a href="#features" class="text-white font-semibold hover:text-white/80 transition-colors">Why CLEF </a>
-          <a href="#signup" class="text-white font-semibold hover:text-white/80 transition-colors">Early Access</a>
-        </div>
-        <button id="menuToggle" class="md:hidden text-white" aria-label="Toggle menu">
-          <i data-lucide="menu" class="h-6 w-6"></i>
-        </button>
-      </div>
-      <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-3">
-        <a href="#problem" class="block text-white font-semibold hover:text-white/80 transition-colors">Problem</a>
-        <a href="#solution" class="block text-white font-semibold hover:text-white/80 transition-colors">Solution</a>
-        <a href="#features" class="block text-white font-semibold hover:text-white/80 transition-colors">Features</a>
-        <a href="#signup" class="block text-white font-semibold hover:text-white/80 transition-colors">Early Access</a>
+<body><a class="skip-link" href="#main">Skip to Content</a>
+<header class="site-header">
+  <div class="nav-wrap">
+    <a href="/" class="brand" aria-label="CLEF Home"><img src="/assets/clef-logo.png" width="40" height="40" alt="">CLEF</a>
+    <nav class="desktop-nav" aria-label="Main navigation"><a href="/" aria-current="page">Home</a><a href="/venues/">For Venues</a><a href="/musicians/">For Musicians &amp; Bands</a><a href="/about/">About Us</a><a class="nav-signup" href="#signup">Get Early Access</a></nav>
+    <details class="mobile-menu" data-menu><summary>Menu <span class="menu-lines" aria-hidden="true"></span></summary>
+      <nav aria-label="Mobile navigation"><a href="/" aria-current="page">Home</a><a href="/venues/">For Venues</a><a href="/musicians/">For Musicians &amp; Bands</a><a href="/about/">About Us</a><a class="nav-signup" href="#signup">Get Early Access</a></nav>
+    </details>
+  </div>
+</header>
+<main id="main">
+  <section id="hero" class="home-hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="home-intro"><h1 id="hero-title">Good Music.<br><span class="text-orange">Better Connections.</span></h1>
+        <p>CLEF brings venues, musicians, and bands together to find each other and organize live shows.</p>
+        <div class="hero-next"><a class="hero-signup" href="#signup">Get Early Access <span aria-hidden="true">→</span></a><a class="text-link" href="#features">Choose Your Side <span aria-hidden="true">↓</span></a></div>
       </div>
     </div>
-  </nav>
+      <figure class="performance-panel" data-media-slot="band" data-performance-video data-parallax="hero">
+        <img class="performance-image" src="/assets/band-performance-poster.jpg" width="1080" height="2048" alt="" fetchpriority="high" decoding="async">
+        <video id="band-performance" class="performance-video" data-src="/assets/band-performance.mp4" data-next-src="/assets/band-performance-2.mp4" data-next-poster="/assets/band-performance-2-poster.jpg" poster="/assets/band-performance-poster.jpg" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      </figure>
+    <a class="hero-scroll-cue" href="#features" aria-label="Scroll down to explore CLEF and choose your side"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6"/></svg></a>
+  </section>
 
-  <!-- Hero -->
-  <section class="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-b from-orange-100 to-white">
-    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-orange-300/40 to-orange-400/30 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-orange-400/30 to-transparent rounded-full blur-3xl"></div>
-    <div class="max-w-7xl mx-auto relative">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="space-y-8">
-          <div id="audToggle" class="relative grid grid-cols-2 w-[300px] max-w-full bg-white/85 backdrop-blur-sm border border-orange-200/90 p-1.5 rounded-full shadow-[0_8px_24px_-8px_rgba(251,146,60,0.45)]" role="tablist" aria-label="Choose your view">
-            <span id="audThumb" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] rounded-full bg-gradient-to-r from-orange-400 to-orange-500 shadow-md shadow-orange-400/40" style="transition: transform .5s cubic-bezier(0.34,1.56,0.64,1);"></span>
-            <button id="audVenue" type="button" role="tab" aria-selected="true" class="relative z-10 text-center whitespace-nowrap px-4 py-2.5 rounded-full text-sm font-semibold text-white transition-colors duration-300">I'm a venue</button>
-            <button id="audMusician" type="button" role="tab" aria-selected="false" class="relative z-10 text-center whitespace-nowrap px-4 py-2.5 rounded-full text-sm font-semibold text-gray-500 hover:text-orange-600 transition-colors duration-300">I'm a musician</button>
-          </div>
-          <div class="space-y-6 stagger-children">
-            <h1 class="text-6xl lg:text-7xl text-gray-900 leading-[1.1]">
-              <span id="heroLine1" class="inline-block">Book Live Music.</span><br />
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-orange-400 animate-text-shimmer inline-block">No Chaos.</span>
-            </h1>
-            <p id="heroSub" class="text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-xl">One platform for independent venues and local musicians. <span class="text-orange-500 font-semibold">No cold emails. No handshake deals. No disputes.</span></p>
-          </div>
-          <div class="flex flex-wrap gap-4">
-            <a href="#signup" class="inline-flex items-center justify-center bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white px-10 h-14 rounded-lg shadow-xl shadow-orange-400/40 hover:shadow-2xl hover:shadow-orange-400/50 transition-all duration-300">Sign Up for Early Access</a>
+  <section id="features" class="scroll-story" data-scroll-story aria-label="Discover how CLEF brings live music together">
+    <div class="story-sticky">
+      <article class="story-scene story-choice" data-story-scene style="--scene-index:1" aria-labelledby="story-choice-title">
+        <div class="container story-layout story-layout-wide">
+          <div class="story-copy"><p class="story-label"><span class="story-index" aria-hidden="true">01</span> Find Your Place</p><h2 id="story-choice-title">Book live music—<br>or <span class="story-title-accent">play it?</span></h2><p><strong>Start with the side that fits you.</strong> Explore what CLEF can do for your venue, your music, or your band.</p></div>
+          <div class="story-paths">
+            <a href="/venues/" class="story-path story-path-venue story-path-photo"><img src="/assets/photos/music-room-640.jpg" width="640" height="960" alt="" loading="lazy" decoding="async"><div class="story-path-body"><span>For Venues</span><strong>I Book Live Music.</strong><em>Explore Venues <b aria-hidden="true">→</b></em></div></a>
+            <a href="/musicians/" class="story-path story-path-artist story-path-photo"><img src="/assets/photos/jazz-night-640.jpg" width="640" height="427" alt="" loading="lazy" decoding="async"><div class="story-path-body"><span>For Musicians &amp; Bands</span><strong>I Make Live Music.</strong><em>Explore Your Side <b aria-hidden="true">→</b></em></div></a>
           </div>
         </div>
-        <div class="relative lg:h-[600px] flex items-center justify-center">
-          <div class="absolute inset-0 bg-gradient-to-br from-orange-300 to-orange-500 rounded-[2.5rem] opacity-25 blur-2xl scale-95"></div>
-          <div class="relative w-full">
-            <div class="relative overflow-hidden rounded-[2.5rem] shadow-2xl hover:shadow-orange-400/30 transition-shadow duration-500 border border-orange-200">
-              <img src="https://images.unsplash.com/photo-1656369895489-e24a2d0816e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Live music performance" class="w-full h-[500px] lg:h-[600px] object-cover" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </article>
+      <article class="story-scene story-venue" data-story-scene style="--scene-index:2" aria-labelledby="story-venue-title">
+        <div class="container story-layout"><figure class="story-photo"><img src="/assets/photos/local-pub-1200.jpg" srcset="/assets/photos/local-pub-640.jpg 640w, /assets/photos/local-pub-1200.jpg 1200w" sizes="(max-width: 767px) calc(100vw - 40px), 560px" width="1200" height="800" alt="A performer on a low pub stage with a seated audience" loading="lazy" decoding="async"></figure>
+          <div class="story-copy"><p class="story-label"><span class="story-index" aria-hidden="true">02</span> For Venues · Open Dates</p><h2 id="story-venue-title">An <span class="story-title-accent">open date.</span><br>A place to start.</h2><p><strong>Give artists a date to aim for.</strong> Post an opening, review the musicians and bands who apply, and hear their music before you connect.</p>
+            <ol class="story-sequence" aria-label="How venues find artists"><li>Post a date</li><li>Review artists</li><li>Start talking</li></ol>
+            <a class="button button-primary" href="/venues/">See How Venues Book <span aria-hidden="true">→</span></a>
+          </div></div>
+      </article>
+      <article class="story-scene story-artist" data-story-scene style="--scene-index:3" aria-labelledby="story-artist-title">
+        <div class="container story-layout"><figure class="story-photo"><img src="/assets/photos/vocalist-1200.jpg" srcset="/assets/photos/vocalist-640.jpg 640w, /assets/photos/vocalist-1200.jpg 1200w" sizes="(max-width: 767px) calc(100vw - 40px), 560px" width="1200" height="1800" alt="A vocalist performing in a warmly lit local venue" loading="lazy" decoding="async"></figure>
+          <div class="story-copy"><p class="story-label"><span class="story-index" aria-hidden="true">03</span> For Musicians &amp; Bands</p><h2 id="story-artist-title">Let <span class="story-title-accent">your music</span><br>make the introduction.</h2><p><strong>Your profile tells your story.</strong> Find a venue’s open date and apply with your music, photos, and experience in one place.</p>
+            <ol class="story-sequence" aria-label="How musicians and bands apply"><li>Find a date</li><li>Share your profile</li><li>Apply</li></ol>
+            <a class="button button-primary" href="/musicians/">See How Artists Apply <span aria-hidden="true">→</span></a>
+          </div></div>
+      </article>
+      <article id="solution" class="story-scene story-outcome" data-story-scene style="--scene-index:4" aria-labelledby="story-outcome-title">
+        <div class="container story-layout"><figure class="story-photo"><img src="/assets/photos/soundcheck-1200.jpg" srcset="/assets/photos/soundcheck-640.jpg 640w, /assets/photos/soundcheck-1200.jpg 1200w" sizes="(max-width: 767px) calc(100vw - 40px), 560px" width="1200" height="675" alt="Musicians talking during a soundcheck" loading="lazy" decoding="async"></figure>
+          <div class="story-copy"><p class="story-label"><span class="story-index" aria-hidden="true">04</span> For Both Sides · Booking Details</p><h2 id="story-outcome-title">Same show.<br><span class="story-title-accent">Same page.</span></h2><p><strong>Know what you’ve agreed on.</strong> Work out pay and set times together, then keep the conversation and terms with the booking.</p>
+            <ul class="story-together" aria-label="What stays with your booking"><li>Conversation</li><li>Pay &amp; set times</li><li>Agreed terms</li></ul>
+            <a class="button button-primary" href="#signup">Get Early Access</a>
+          </div></div>
+      </article>
     </div>
   </section>
 
-  <!-- Problem -->
-  <section id="problem" class="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-20 items-center">
-        <div class="relative order-2 lg:order-1 reveal">
-          <div class="aud-venue grid grid-cols-2 gap-5">
-            <div class="space-y-5">
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Crowd at an intimate club" crossorigin="anonymous" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1543007630-9710e4a00a20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Cozy bar interior" crossorigin="anonymous" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-            </div>
-            <div class="space-y-5 pt-12">
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="DJ set at a club" crossorigin="anonymous" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1559519529-0936e4058364?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Acoustic act on a small stage" crossorigin="anonymous" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-            </div>
-          </div>
-          <div class="aud-musician grid grid-cols-2 gap-5">
-            <div class="space-y-5">
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1622309854680-c9a408968056?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Singer performing on stage" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1687585612299-1f0e727b6f44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Drummer performing live" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-            </div>
-            <div class="space-y-5 pt-12">
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1687589891886-a8578a54ef76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Saxophonist performing" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-              <div class="group relative overflow-hidden rounded-3xl shadow-lg h-52 border border-gray-100">
-                <img src="https://images.unsplash.com/photo-1667236449230-3f6e5fb982a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Guitarist close up" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="order-1 lg:order-2 space-y-6 reveal">
-          <div class="inline-block bg-orange-100 text-orange-600 px-5 py-2.5 rounded-full border border-orange-300 animate-float">The Problem</div>
-          <h2 class="text-5xl lg:text-6xl text-gray-900 leading-[1.1] font-semibold">
-            <span class="inline-block">The Current Process</span>
-            <span class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-500">Is Broken</span>
-          </h2>
-          <p class="text-xl text-gray-600 leading-relaxed"><span class="aud-venue">The live music booking industry runs on cold emails, informal handshakes, and scattered communication—with no paper trail and no accountability for either side.</span><span class="aud-musician">Getting booked runs on cold emails, unanswered DMs, and verbal promises about pay—leaving musicians with all the risk and none of the paper trail.</span></p>
-          <div class="flex items-start gap-3.5 pt-3">
-            <div class="mt-0.5 w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-400/30 flex-shrink-0">
-              <i data-lucide="check" class="w-5 h-5 text-white"></i>
-            </div>
-            <p class="text-xl text-gray-900 font-semibold leading-snug">
-              <span class="aud-venue">CLEF replaces all of that with <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">one system that works for both sides.</span></span>
-              <span class="aud-musician">CLEF replaces all of that with <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">one place to find gigs, apply, and lock in your pay.</span></span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-20 lg:mt-28 mb-10 text-center max-w-2xl mx-auto">
-        <h3 class="text-3xl lg:text-4xl font-semibold text-gray-900 tracking-tight">The four biggest <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-500">headaches</span></h3>
-      </div>
-      <div id="problemCardsVenue" class="aud-venue grid sm:grid-cols-2 gap-6 lg:gap-8"></div>
-      <div id="problemCardsMusician" class="aud-musician grid sm:grid-cols-2 gap-6 lg:gap-8"></div>
+  <section id="problem" class="company-section cinematic-section" aria-labelledby="company-title"><div class="container company-layout">
+    <figure class="company-photo" data-cinematic-media>
+      <img src="/assets/photos/listening-room-1200.jpg" srcset="/assets/photos/listening-room-640.jpg 640w, /assets/photos/listening-room-1200.jpg 1200w" sizes="(max-width: 767px) calc(100vw - 40px), 560px" width="1200" height="800" alt="Audience members enjoying a singer and guitarist in a small venue" loading="lazy" decoding="async">
+    </figure>
+    <div class="company-copy">
+      <p class="story-label">A Note From CLEF</p><h2 id="company-title">For the people<br>behind the music.</h2>
+      <p class="company-lead">The room. The band. The person putting the night together.</p>
+      <p>We’re building CLEF to make it easier for those people to find each other—and organize a show. We’re still growing, and we’d love for you to be part of what comes next.</p>
+      <p class="company-signature">See you at the next show.<span>The CLEF Team</span></p>
+      <a class="button company-link" href="#signup">Be Part of CLEF <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
-  </section>
-
-  <!-- Solution -->
-  <section id="solution" class="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-neutral-900">
-    <div class="absolute inset-x-0 top-0 h-[560px] sm:h-[600px] lg:h-[640px]">
-      <img src="https://images.unsplash.com/photo-1485686531765-ba63b07845a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920" alt="" crossorigin="anonymous" class="w-full h-full object-cover" />
-      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-neutral-900"></div>
-    </div>
-    <div class="absolute top-1/2 left-0 w-[400px] h-[400px] bg-orange-200/30 rounded-full blur-3xl -translate-y-1/2"></div>
-    <div class="absolute top-1/3 right-0 w-[500px] h-[500px] bg-orange-300/20 rounded-full blur-3xl"></div>
-
-    <div class="max-w-7xl mx-auto relative">
-      <div class="text-center mb-16">
-        <div class="inline-block bg-white/90 backdrop-blur-md text-orange-600 px-5 py-2.5 rounded-full border border-orange-300 mb-6 animate-float shadow-lg">The Solution</div>
-        <h2 class="text-5xl lg:text-6xl text-white leading-[1.1] font-semibold mb-6 tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
-          <span class="aud-venue">How a Venue <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">Books a Show</span></span>
-          <span class="aud-musician">How a Musician <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">Lands a Gig</span></span>
-        </h2>
-        <p class="text-xl text-white max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] font-medium"><span class="aud-venue">Six steps. Zero confusion. The entire workflow on CLEF—from open date to confirmed booking.</span><span class="aud-musician">Six steps. Zero confusion. The entire workflow on CLEF—from finding the date to building your track record.</span></p>
-      </div>
-
-      <div class="aud-venue grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 relative">
-        <!-- Step 1 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">1</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 01</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-[11px] font-bold text-gray-700">December</div>
-              <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-orange-500"></i>
-            </div>
-            <div class="grid grid-cols-7 gap-[3px]" id="calGrid"></div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Finalize the Month</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Mark which dates you want booked. Open them up on your venue calendar.</p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">2</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 02</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5 space-y-2" id="applyList"></div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Musicians Apply</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Matched musicians in your area apply to your open dates—no cold messages.</p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">3</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 03</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="flex items-start gap-2.5 mb-2">
-              <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500 flex-shrink-0 shadow-sm flex items-center justify-center">
-                <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="text-[11px] font-bold text-gray-800 truncate">Jake Rivers</div>
-                <div class="text-[8px] text-gray-500 mb-1">Indie Folk · Trio</div>
-                <div class="flex gap-[2px]">
-                  <i data-lucide="star" class="w-2 h-2 text-orange-500 fill-orange-500"></i>
-                  <i data-lucide="star" class="w-2 h-2 text-orange-500 fill-orange-500"></i>
-                  <i data-lucide="star" class="w-2 h-2 text-orange-500 fill-orange-500"></i>
-                  <i data-lucide="star" class="w-2 h-2 text-orange-500 fill-orange-500"></i>
-                  <i data-lucide="star" class="w-2 h-2 text-orange-500 fill-orange-500"></i>
-                </div>
-              </div>
-            </div>
-            <div class="text-center text-[9px] font-bold text-white bg-gradient-to-r from-orange-400 to-orange-500 py-1.5 rounded-md shadow-sm shadow-orange-400/30">Choose Artist</div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Review Profiles &amp; EPKs</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Open each applicant's full profile and EPK. Choose the artist who fits your venue.</p>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">4</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 04</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5 space-y-2">
-            <div class="flex justify-start"><div class="text-[9px] bg-white border border-gray-200 px-2.5 py-1.5 rounded-2xl rounded-bl-sm max-w-[85%] text-gray-700 shadow-sm">Sound check at 6pm?</div></div>
-            <div class="flex justify-end"><div class="text-[9px] bg-gradient-to-br from-orange-400 to-orange-500 text-white px-2.5 py-1.5 rounded-2xl rounded-br-sm max-w-[85%] shadow-sm">Yes, that works!</div></div>
-            <div class="flex justify-start"><div class="text-[9px] bg-white border border-gray-200 px-2.5 py-1.5 rounded-2xl rounded-bl-sm max-w-[85%] text-gray-700 shadow-sm">Sending offer now →</div></div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Lock in Details</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Message the artist directly. Confirm load-in, sound check, and set times.</p>
-        </div>
-
-        <!-- Step 5 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">5</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 05</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="text-[10px] font-bold text-gray-700 mb-2 flex items-center justify-between">
-              <span>Deal Terms</span>
-              <i data-lucide="badge-check" class="w-3.5 h-3.5 text-orange-500"></i>
-            </div>
-            <div class="space-y-1.5 mb-2">
-              <div class="flex justify-between text-[9px]"><span class="text-gray-500">Date</span><span class="text-gray-800 font-semibold">Dec 13</span></div>
-              <div class="flex justify-between text-[9px]"><span class="text-gray-500">Set Time</span><span class="text-gray-800 font-semibold">9:00 PM</span></div>
-              <div class="flex justify-between text-[9px] pb-1.5 border-b border-gray-200"><span class="text-gray-500">Pay</span><span class="text-gray-900 font-bold">$350</span></div>
-            </div>
-            <div class="flex items-center justify-center gap-1 text-[9px] font-bold text-orange-500">
-              <i data-lucide="check" class="w-3 h-3"></i> Terms Agreed
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Lock In the Terms</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Both sides agree on pay, set time, and details in writing. CLEF keeps the record—nothing gets lost.</p>
-        </div>
-
-        <!-- Step 6 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">6</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 06</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="text-[10px] font-bold text-gray-700 mb-2 flex items-center justify-between">
-              <span>Tonight's turnout</span>
-              <i data-lucide="ticket" class="w-3.5 h-3.5 text-orange-500"></i>
-            </div>
-            <div class="flex items-baseline gap-1 mb-2"><span class="text-2xl font-bold text-gray-900 leading-none">142</span><span class="text-[9px] text-gray-500 font-medium">guests counted</span></div>
-            <div class="flex items-center justify-center gap-1 text-[9px] font-bold text-orange-500">
-              <i data-lucide="check" class="w-3 h-3"></i> Booking complete
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Log the Draw</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">After the show, the venue logs how many people came. That count follows the artist—so future venues can see their real draw.</p>
-        </div>
-      </div>
-
-      <!-- Musician steps -->
-      <div class="aud-musician grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 relative">
-        <!-- M Step 1 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">1</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 01</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-[11px] font-bold text-gray-700">Open dates near you</div>
-              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-orange-500"></i>
-            </div>
-            <div class="space-y-1.5">
-              <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-md bg-gradient-to-br from-orange-300 to-orange-500 flex-shrink-0 shadow-sm flex items-center justify-center"><i data-lucide="building" class="w-3 h-3 text-white"></i></div><div class="flex-1 min-w-0"><div class="text-[10px] font-bold text-gray-700 truncate leading-tight">The Blue Note</div><div class="text-[8px] text-gray-500">Fri Dec 13 · 1.2 mi</div></div><div class="text-[8px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-bold">OPEN</div></div>
-              <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-md bg-gradient-to-br from-orange-300 to-orange-500 flex-shrink-0 shadow-sm flex items-center justify-center"><i data-lucide="building" class="w-3 h-3 text-white"></i></div><div class="flex-1 min-w-0"><div class="text-[10px] font-bold text-gray-700 truncate leading-tight">Echo Lounge</div><div class="text-[8px] text-gray-500">Sat Dec 14 · 2.8 mi</div></div><div class="text-[8px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-bold">OPEN</div></div>
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Find Open Dates</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Browse venues near you and see exactly which dates they've opened up for booking.</p>
-        </div>
-
-        <!-- M Step 2 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">2</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 02</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="flex items-start gap-2.5 mb-2.5">
-              <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500 flex-shrink-0 shadow-sm flex items-center justify-center"><i data-lucide="building" class="w-5 h-5 text-white"></i></div>
-              <div class="flex-1 min-w-0">
-                <div class="text-[11px] font-bold text-gray-800 truncate">The Blue Note</div>
-                <div class="text-[8px] text-gray-500 mb-1">Fri Dec 13 · Indie / Folk</div>
-                <div class="text-[10px] font-bold text-gray-900">$350 <span class="text-[8px] font-medium text-gray-500">/ night</span></div>
-              </div>
-            </div>
-            <div class="flex items-center justify-center gap-1 text-[9px] font-bold text-white bg-gradient-to-r from-orange-400 to-orange-500 py-1.5 rounded-md shadow-sm shadow-orange-400/30"><i data-lucide="zap" class="w-2.5 h-2.5"></i> Apply now</div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Apply in One Tap</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Tap apply on any open date. No cold emails, no DMs, no chasing replies.</p>
-        </div>
-
-        <!-- M Step 3 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">3</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 03</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-4 mb-5 text-center">
-            <div class="w-10 h-10 mx-auto rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-md shadow-orange-400/40 mb-2"><i data-lucide="check" class="w-5 h-5 text-white"></i></div>
-            <div class="text-[12px] font-bold text-gray-800">You're booked!</div>
-            <div class="text-[8px] text-gray-500 mt-0.5">The Blue Note picked you for Dec 13</div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Get Chosen</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">The venue reviews your profile and EPK, then picks you for the date.</p>
-        </div>
-
-        <!-- M Step 4 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">4</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 04</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5 space-y-2">
-            <div class="flex justify-start"><div class="text-[9px] bg-white border border-gray-200 px-2.5 py-1.5 rounded-2xl rounded-bl-sm max-w-[85%] text-gray-700 shadow-sm">Can you load in at 6?</div></div>
-            <div class="flex justify-end"><div class="text-[9px] bg-gradient-to-br from-orange-400 to-orange-500 text-white px-2.5 py-1.5 rounded-2xl rounded-br-sm max-w-[85%] shadow-sm">Yep, see you at 6!</div></div>
-            <div class="flex justify-start"><div class="text-[9px] bg-white border border-gray-200 px-2.5 py-1.5 rounded-2xl rounded-bl-sm max-w-[85%] text-gray-700 shadow-sm">Sending the offer now →</div></div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Lock in Details</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Message the venue directly. Confirm load-in, sound check, and set times.</p>
-        </div>
-
-        <!-- M Step 5 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">5</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 05</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="text-[10px] font-bold text-gray-700 mb-2 flex items-center justify-between">
-              <span>Your Pay</span>
-              <i data-lucide="badge-check" class="w-3.5 h-3.5 text-orange-500"></i>
-            </div>
-            <div class="space-y-1.5 mb-2">
-              <div class="flex justify-between text-[9px]"><span class="text-gray-500">Date</span><span class="text-gray-800 font-semibold">Dec 13</span></div>
-              <div class="flex justify-between text-[9px]"><span class="text-gray-500">Set Time</span><span class="text-gray-800 font-semibold">9:00 PM</span></div>
-              <div class="flex justify-between text-[9px] pb-1.5 border-b border-gray-200"><span class="text-gray-500">Pay</span><span class="text-gray-900 font-bold">$350</span></div>
-            </div>
-            <div class="flex items-center justify-center gap-1 text-[9px] font-bold text-orange-500">
-              <i data-lucide="check" class="w-3 h-3"></i> Locked in &amp; confirmed
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Get Paid on Time</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Pay, set time, and details agreed up front and saved in CLEF—so you always know what you're getting.</p>
-        </div>
-
-        <!-- M Step 6 -->
-        <div class="group relative bg-white rounded-2xl p-7 lg:p-8 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300">
-          <div class="flex items-center gap-2.5 mb-5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-orange-400/30">6</div>
-            <div class="text-[11px] uppercase tracking-[0.15em] text-orange-500 font-bold">Step 06</div>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100 p-3 mb-5">
-            <div class="flex items-center gap-2.5 mb-2.5">
-              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500 flex-shrink-0 shadow-sm"></div>
-              <div class="flex-1 min-w-0">
-                <div class="text-[11px] font-bold text-gray-800 truncate">Jake Rivers</div>
-                <div class="text-[8px] text-gray-500">Avg. draw · last 5 shows</div>
-              </div>
-              <div class="text-right"><div class="text-base font-bold text-gray-900 leading-none">138</div><div class="text-[7px] text-gray-500">guests</div></div>
-            </div>
-            <div class="flex items-center justify-center gap-1 text-[9px] font-bold text-orange-500">
-              <i data-lucide="badge-check" class="w-3 h-3"></i> Verified draw
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2.5 leading-tight tracking-tight">Build Your Track Record</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">Your headcount from each show is saved to your profile, so the next venue can see you reliably draw a crowd.</p>
-        </div>
-      </div>
-
-      <!-- Closing banner (shared) -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 mt-7 lg:mt-8 p-7 lg:p-8 shadow-[0_18px_40px_-12px_rgba(251,146,60,0.5)] flex flex-col sm:flex-row sm:items-center gap-6">
-        <div class="absolute -top-12 -right-12 w-44 h-44 bg-white/15 rounded-full blur-2xl"></div>
-        <div class="relative flex items-center gap-4 flex-1">
-          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0"><i data-lucide="check-check" class="w-6 h-6 text-white"></i></div>
-          <div>
-            <h3 class="text-2xl font-semibold text-white leading-tight tracking-tight">That's the whole flow</h3>
-            <p class="text-sm text-white/90 leading-relaxed mt-1"><span class="aud-venue">From open date to headcount—every step lives in CLEF.</span><span class="aud-musician">From finding the date to building your track record—every step lives in CLEF.</span></p>
-          </div>
-        </div>
-        <a href="#signup" class="relative inline-flex items-center justify-center gap-2 bg-white text-orange-600 font-semibold rounded-xl px-6 h-12 shadow-lg hover:bg-orange-50 transition-colors flex-shrink-0 whitespace-nowrap">Get early access <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section id="features" class="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-orange-100">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <div class="inline-block bg-white border border-orange-300 text-orange-600 px-5 py-2.5 rounded-full mb-6 shadow-sm animate-float">What Makes CLEF Different</div>
-        <h2 class="text-5xl lg:text-6xl text-gray-900 leading-[1.1] font-semibold mb-6 tracking-tight">
-          The CLEF <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-500">Difference</span>
-        </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"><span class="aud-venue">Four things that make CLEF the right tool for venues who take booking seriously.</span><span class="aud-musician">Four things that make CLEF the right tool for working musicians who take their gigs seriously.</span></p>
-      </div>
-
-      <div id="featureCardsVenue" class="aud-venue grid sm:grid-cols-2 gap-6 lg:gap-8 mb-20"></div>
-      <div id="featureCardsMusician" class="aud-musician grid sm:grid-cols-2 gap-6 lg:gap-8 mb-20"></div>
-
-      <div class="aud-venue bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden shadow-2xl border border-gray-700">
-        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-orange-400/30 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500/20 rounded-full blur-3xl"></div>
-        <div class="relative grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <div>
-            <div class="inline-block bg-white/10 backdrop-blur-sm text-orange-300 border border-white/15 px-4 py-1.5 rounded-full text-sm font-medium mb-5">Built for venues</div>
-            <h3 class="text-4xl lg:text-5xl font-semibold text-white mb-4 tracking-tight">Book more shows. <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">Less chaos.</span></h3>
-            <p class="text-lg text-gray-400 leading-relaxed mb-7">Post your open dates, choose who plays, and message artists directly &mdash; your whole booking operation in one place.</p>
-            <div class="flex flex-wrap gap-2.5">
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Control your inbox</span>
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Verified applicants</span>
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Built-in calendar</span>
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Deal terms saved</span>
-            </div>
-          </div>
-          <div class="relative rounded-2xl border-2 border-orange-400 bg-gradient-to-br from-orange-500/15 to-transparent p-8 lg:p-9 shadow-[0_0_50px_-10px_rgba(251,146,60,0.55)]">
-            <div class="text-xs font-bold text-orange-300 uppercase tracking-[0.15em] mb-3">For venues</div>
-            <div class="mb-1"><span class="text-5xl font-bold text-white leading-none">Built to book</span></div>
-            <div class="text-sm text-gray-400 mb-7">Everything your venue needs in one place.</div>
-            <ul class="space-y-3.5 text-sm text-gray-200">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Post unlimited open dates</li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Review full profiles &amp; EPKs</li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Headcount tracking on every show</li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Deal terms saved in one place</li>
-            </ul>
-            <a href="#signup" class="mt-8 inline-flex w-full items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300">Sign up for early access</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="aud-musician bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden shadow-2xl border border-gray-700">
-        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-orange-400/30 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500/20 rounded-full blur-3xl"></div>
-        <div class="relative grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <div>
-            <div class="inline-block bg-white/10 backdrop-blur-sm text-orange-300 border border-white/15 px-4 py-1.5 rounded-full text-sm font-medium mb-5">Free for musicians</div>
-            <h3 class="text-4xl lg:text-5xl font-semibold text-white mb-4 tracking-tight">Free to <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">get started.</span></h3>
-            <p class="text-lg text-gray-400 leading-relaxed mb-7">Musicians join CLEF for free. Find gigs, apply, and get booked &mdash; with no fees or commissions taken from what you earn.</p>
-            <div class="flex flex-wrap gap-2.5">
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Free to join</span>
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">No commissions</span>
-              <span class="text-xs font-medium text-gray-300 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 whitespace-nowrap">Keep 100% of your pay</span>
-            </div>
-          </div>
-          <div class="relative rounded-2xl border-2 border-orange-400 bg-gradient-to-br from-orange-500/15 to-transparent p-8 lg:p-9 shadow-[0_0_50px_-10px_rgba(251,146,60,0.55)]">
-            <div class="text-xs font-bold text-orange-300 uppercase tracking-[0.15em] mb-3">For musicians</div>
-            <div class="flex items-baseline gap-2 mb-1"><span class="text-6xl font-bold text-white leading-none">Free</span><span class="text-xl font-semibold text-orange-300">/ to join</span></div>
-            <div class="text-sm text-gray-400 mb-7">Everything you need to land gigs.</div>
-            <ul class="space-y-3.5 text-sm text-gray-200">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Unlimited gig applications</li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Your profile &amp; EPK included</li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-5 h-5 rounded-full bg-orange-400/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-orange-200"></i></span>Your own availability calendar</li>
-            </ul>
-            <a href="#signup" class="mt-8 inline-flex w-full items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300">Sign up for early access</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Gallery -->
-  <section class="py-16 bg-white overflow-hidden">
-    <div class="mb-12 text-center">
-      <h2 class="text-4xl lg:text-5xl text-gray-900 mb-4">
-        <span class="inline-block">Live Music,</span>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-500 animate-text-shimmer inline-block">Booked Right</span>
-      </h2>
-      <p class="text-lg text-gray-600">One platform for independent venues and local musicians</p>
-    </div>
-    <div class="relative mb-8">
-      <div class="flex gap-6 animate-scroll-left w-max" id="galleryRow1"></div>
-    </div>
-    <div class="relative">
-      <div class="flex gap-6 animate-scroll-right w-max" id="galleryRow2"></div>
-    </div>
-  </section>
-
-  <!-- Signup -->
-  <section id="signup" class="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-400 text-white relative overflow-hidden">
-    <div class="absolute inset-0 opacity-20">
-      <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-white rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-300 rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-4xl mx-auto text-center relative">
-      <div class="inline-block bg-white/20 backdrop-blur-sm text-white border border-white/30 px-5 py-2.5 rounded-full mb-8 animate-float"><span class="aud-venue">Now Accepting Beta Venues</span><span class="aud-musician">Now Welcoming Founding Musicians</span></div>
-      <h2 class="text-5xl lg:text-6xl mb-8 leading-tight">Get Early Access to CLEF</h2>
-      <p class="text-xl text-white/90 mb-6 max-w-2xl mx-auto leading-relaxed">Be the first to know when CLEF opens up.</p>
-      <p class="text-3xl lg:text-4xl text-white mb-12 max-w-2xl mx-auto leading-tight font-semibold tracking-tight italic">Book with confidence. <span class="text-orange-100">Play with passion.</span></p>
-
-      <div id="earlyAccess" data-signup-wizard data-page-role="">
-<div class="signup-wizard" hidden>
-          <p class="signup-progress" data-signup-progress>Step 1 of 3</p>
-          <section data-signup-step="1" aria-labelledby="signup-role-title"><h3 id="signup-role-title">First, choose your side.</h3><div class="signup-role-grid"><button type="button" data-signup-role="venue">Venue / Booking Manager</button><button type="button" data-signup-role="musician">Musician</button><button type="button" data-signup-role="band">Band</button></div></section>
-          <section data-signup-step="2" aria-labelledby="signup-location-title" hidden><h3 id="signup-location-title">Where are you based?</h3><label for="signupLocation">City + State/Region</label><input id="signupLocation" data-signup-location type="text" maxlength="100" autocomplete="address-level2" placeholder="Pittsburgh, PA"><p class="signup-field-error" data-signup-error role="alert"></p><div class="signup-step-actions"><button type="button" data-signup-back>Back</button><button type="button" data-signup-continue>Continue</button></div></section>
-        </div>
-        <div data-signup-final>
-        <button id="googleSignup" type="button" disabled aria-describedby="signupConsent signupStatus">
-          <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="" />
-          Sign up with Google
-        </button>
-        <p class="signup-divider">or use your email</p>
-        <div id="kitSignup"><script async data-uid="c338b66b93" src="https://clef.kit.com/c338b66b93/index.js"></script></div>
-        <p id="signupFallback">Loading signup… If it does not appear, <a href="https://clef.kit.com/c338b66b93">open the signup form</a>.</p>
-        <p id="signupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
-        <p id="signupConsent" class="signup-consent">By signing up with email or Google, you agree to receive CLEF early-access updates through Kit. Unsubscribe anytime. No extra email confirmation is needed.</p>
-      </div><button class="signup-back-final" type="button" data-signup-back hidden>Back</button>
-</div>
-      <p class="mt-8 text-white/70">No spam, ever. Unsubscribe at any time.</p>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-white text-gray-600 py-16 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-3">
-          <img src="assets/clefapp-logo.jpg" alt="CLEF Logo" class="h-9 w-9 rounded-lg" />
-          <span class="text-2xl text-gray-900">CLEF</span>
-        </div>
-        <p class="text-sm">© 2026 CLEF. Built for independent venues and local musicians.</p>
-        <div class="flex items-center gap-8">
-          <div class="flex gap-4">
-            <a href="https://www.instagram.com/clefappofficial/?__pwa=." target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-orange-500 transition-colors" aria-label="Instagram"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-            <a href="https://www.youtube.com/@CLEFAPP" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-orange-500 transition-colors" aria-label="YouTube"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"></polygon></svg></a>
-            <a href="https://x.com/clefofficial_?s=21" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-orange-500 transition-colors" aria-label="X (Twitter)"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
-            <a href="https://www.tiktok.com/@clefapp" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-orange-500 transition-colors" aria-label="TikTok">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-            </a>
-          </div>
-          <div class="hidden lg:flex gap-8">
-            <a href="/privacy/" class="hover:text-orange-500 transition-colors">Privacy</a>
-            <a href="/delete-account/" class="hover:text-orange-500 transition-colors">Delete account</a>
-            <a href="#" class="hover:text-orange-500 transition-colors">Terms</a>
-            <a href="mailto:contact@clefapp.net" class="hover:text-orange-500 transition-colors">Contact</a>
-          </div>
-        </div>
-      </div>
-      <div class="flex lg:hidden justify-center gap-8 mt-6">
-        <a href="/privacy/" class="hover:text-orange-500 transition-colors">Privacy</a>
-        <a href="/delete-account/" class="hover:text-orange-500 transition-colors">Delete account</a>
-        <a href="#" class="hover:text-orange-500 transition-colors">Terms</a>
-        <a href="mailto:contact@clefapp.net" class="hover:text-orange-500 transition-colors">Contact</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // ---- Data-driven sections ----
-    const problems = {
-      venue: [
-        { icon: 'mails', title: 'Inbox Overload', description: 'Venues buried under unqualified outreach from dozens of artists every single week.' },
-        { icon: 'mail-warning', title: 'Cold Emails', description: 'Hundreds of pitches to venues that go unanswered or get buried in overflowing inboxes.' },
-        { icon: 'handshake', title: 'Handshake Deals', description: 'Verbal agreements with no paper trail—and no recourse when something goes sideways.' },
-        { icon: 'ticket', title: 'Unknown Draw', description: "Venues book an act with no idea whether they'll pull a crowd or play to an empty room." },
-      ],
-      musician: [
-        { icon: 'mail-warning', title: 'Cold Emails', description: 'Sending pitch after pitch to venues that never reply—or never even open the message.' },
-        { icon: 'search', title: 'Scattered Gigs', description: 'No single place to find open dates near you. Just word of mouth and endless scrolling.' },
-        { icon: 'handshake', title: 'Verbal Promises', description: 'Handshake deals with no paper trail—and no recourse when a gig falls through.' },
-        { icon: 'circle-dollar-sign', title: 'Payment Confusion', description: 'Showing up unsure of the pay, the cut, or when the money will actually land.' },
-      ],
-    };
-    const features = {
-      venue: [
-        { icon: 'shield', title: 'Venues Control the Inbox', description: 'Musicians cannot cold message venues. Post open dates, and only matched musicians can apply—so you decide who you talk to.' },
-        { icon: 'user-check', title: 'Verified Artist Profiles', description: "Every musician meets a minimum profile standard before they're discoverable. A structured EPK lives in every profile." },
-        { icon: 'calendar-days', title: 'Calendars for Everyone', description: 'Both venues and musicians get a calendar. Open dates, applications, and availability all live in one place.' },
-        { icon: 'trending-up', title: 'Real Draw Data', description: "Every show's headcount is logged and tied to the artist, so you can see who really pulls a crowd before you book—a track record you won't find anywhere else." },
-      ],
-      musician: [
-        { icon: 'zap', title: 'Apply With One Tap', description: 'Browse open dates near you and apply in seconds. No cold emails, no waiting on inbox replies.' },
-        { icon: 'user-check', title: 'Your Profile Is Your EPK', description: 'Music samples, photos, genre, and past gigs—built right in and ready to send with every application.' },
-        { icon: 'calendar-days', title: 'Your Own Calendar', description: "Mark the dates you're free. Venues can see your availability and choose reach out to you directly." },
-        { icon: 'dollar-sign', title: 'Know Your Pay Up Front', description: 'Pay, set time, and details agreed before you commit—and saved in CLEF so nothing gets lost.' },
-      ],
-    };
-    const musicianItems = [
-      { icon: 'gift', title: 'Always free, forever', description: 'No fees, no commissions, no subscriptions—ever.' },
-      { icon: 'user-check', title: 'Your profile is your EPK', description: 'Music samples, photos, genre, and past gigs—built right in.' },
-      { icon: 'zap', title: 'Apply to gigs with one tap', description: 'Browse open dates near you. No cold emails or chasing replies.' },
-      { icon: 'calendar-days', title: 'Mark your open dates', description: "Let venues see when you're free. They have the option to reach out directly if they're interested." },
-      { icon: 'dollar-sign', title: 'Know your pay up front', description: 'See the pay, set time, and details before you commit.' },
-    ];
-    const applicants = [
-      { name: 'Jake Rivers', time: '2h ago' },
-      { name: 'Maya Cole', time: '5h ago' },
-      { name: 'The Hollows', time: '1d ago' },
-    ];
-    const galleryImgs = [
-      'https://images.unsplash.com/photo-1558457583-dfd9dabca6ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1687589891886-a8578a54ef76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1687585612299-1f0e727b6f44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1622309854680-c9a408968056?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    ];
-    const galleryImgs2 = [
-      'https://images.unsplash.com/photo-1576109188032-aed32779c007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1692176548571-86138128e36c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1656369895489-e24a2d0816e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      'https://images.unsplash.com/photo-1639408396873-4a284924bc3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    ];
-
-    const bigCard = (icon, title, description, idx) => `
-      <div class="group relative bg-white rounded-3xl p-8 lg:p-10 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_50px_-12px_rgba(251,146,60,0.25)] hover:border-orange-200 transition-all duration-300 overflow-hidden">
-        <div class="absolute top-6 right-8 text-[5.5rem] font-bold text-orange-100 leading-none select-none pointer-events-none tracking-tighter">${String(idx + 1).padStart(2, '0')}</div>
-        <div class="absolute -top-16 -right-16 w-40 h-40 bg-orange-200/40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        <div class="relative">
-          <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-400/40 mb-6">
-            <i data-lucide="${icon}" class="w-8 h-8 text-white"></i>
-          </div>
-          <h3 class="text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 leading-tight tracking-tight">${title}</h3>
-          <p class="text-base lg:text-lg text-gray-600 leading-relaxed max-w-md">${description}</p>
-        </div>
-      </div>`;
-
-    const problemCard = (icon, title, description, idx) => `
-      <div class="group relative bg-white rounded-3xl p-8 lg:p-10 border border-gray-200 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.12)] hover:shadow-[0_24px_60px_-16px_rgba(251,146,60,0.35)] hover:border-orange-300 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-400 to-orange-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-        <div class="flex items-center justify-between mb-6">
-          <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-400/40">
-            <i data-lucide="${icon}" class="w-8 h-8 text-white"></i>
-          </div>
-          <div class="text-6xl font-bold text-orange-100 leading-none select-none pointer-events-none tracking-tighter">${String(idx + 1).padStart(2, '0')}</div>
-        </div>
-        <h3 class="text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 leading-tight tracking-tight">${title}</h3>
-        <p class="text-base lg:text-lg text-gray-600 leading-relaxed">${description}</p>
-      </div>`;
-
-    document.getElementById('problemCardsVenue').innerHTML = problems.venue.map((p, i) => problemCard(p.icon, p.title, p.description, i)).join('');
-    document.getElementById('problemCardsMusician').innerHTML = problems.musician.map((p, i) => problemCard(p.icon, p.title, p.description, i)).join('');
-    document.getElementById('featureCardsVenue').innerHTML = features.venue.map((p, i) => bigCard(p.icon, p.title, p.description, i)).join('');
-    document.getElementById('featureCardsMusician').innerHTML = features.musician.map((p, i) => bigCard(p.icon, p.title, p.description, i)).join('');
-
-    const musicianCardsEl = document.getElementById('musicianCards');
-    if (musicianCardsEl) musicianCardsEl.innerHTML = musicianItems.map((m, i, arr) => `
-      <li class="group flex items-center gap-5 bg-white border border-gray-100 rounded-2xl p-5 lg:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_30px_-8px_rgba(251,146,60,0.25)] hover:border-orange-200 hover:-translate-y-0.5 transition-all duration-300 ${i === arr.length - 1 ? 'sm:col-span-2' : ''}">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-orange-400/40">
-          <i data-lucide="${m.icon}" class="w-7 h-7 text-white"></i>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="text-lg lg:text-xl font-semibold text-gray-900 leading-tight mb-1 tracking-tight">${m.title}</div>
-          <div class="text-sm lg:text-[15px] text-gray-600 leading-relaxed">${m.description}</div>
-        </div>
-      </li>`).join('');
-
-    // Calendar grid
-    const days = ['S','M','T','W','T','F','S'];
-    let calHtml = days.map(d => `<div class="text-[7px] text-center text-gray-400 font-bold pb-1">${d}</div>`).join('');
-    for (let d = 1; d <= 21; d++) {
-      const open = [6,13,20].includes(d);
-      calHtml += `<div class="text-[9px] text-center py-1 rounded-[3px] ${open ? 'bg-gradient-to-br from-orange-400 to-orange-500 text-white font-bold shadow-sm shadow-orange-400/40' : 'text-gray-400'}">${d}</div>`;
-    }
-    document.getElementById('calGrid').innerHTML = calHtml;
-    const venueDashCal = document.getElementById('venueDashCal');
-    if (venueDashCal) venueDashCal.innerHTML = calHtml;
-
-    // Applicant list
-    document.getElementById('applyList').innerHTML = applicants.map(a => `
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-orange-300 to-orange-500 flex-shrink-0 shadow-sm"></div>
-        <div class="flex-1 min-w-0">
-          <div class="text-[10px] font-bold text-gray-700 truncate leading-tight">${a.name}</div>
-          <div class="text-[8px] text-gray-500">Dec 13 · ${a.time}</div>
-        </div>
-        <div class="text-[8px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-bold">NEW</div>
-      </div>`).join('');
-
-    // Gallery rows (duplicated for seamless loop)
-    const galCard = (src) => `<div class="w-80 h-64 rounded-3xl overflow-hidden shadow-lg flex-shrink-0"><img src="${src}" alt="Live music" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" /></div>`;
-    const row = (imgs) => `<div class="flex gap-6 flex-shrink-0">${imgs.map(galCard).join('')}</div><div class="flex gap-6 flex-shrink-0" aria-hidden="true">${imgs.map(galCard).join('')}</div>`;
-    document.getElementById('galleryRow1').innerHTML = row(galleryImgs);
-    document.getElementById('galleryRow2').innerHTML = row(galleryImgs2);
-
-    // Mobile menu
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuToggle.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('hidden') === false;
-      menuToggle.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}" class="h-6 w-6"></i>`;
-      lucide.createIcons();
-    });
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      menuToggle.innerHTML = '<i data-lucide="menu" class="h-6 w-6"></i>';
-      lucide.createIcons();
-    }));
-
-    // Hero audience toggle
-    const audCopy = {
-      venue: {
-        line1: 'Book Live Music.',
-        sub: 'One platform for independent venues and local musicians. <span class="text-orange-500 font-semibold">No cold emails. No handshake deals. No disputes.</span>',
-      },
-      musician: {
-        line1: 'Get Booked.',
-        sub: 'Apply to gigs near you in one tap and know your pay up front. <span class="text-orange-500 font-semibold">No cold emails, no chasing replies—and free to join.</span>',
-      },
-    };
-    const audVenue = document.getElementById('audVenue');
-    const audMusician = document.getElementById('audMusician');
-    const audThumb = document.getElementById('audThumb');
-    const heroLine1 = document.getElementById('heroLine1');
-    const heroSub = document.getElementById('heroSub');
-    function setAudience(which) {
-      const c = audCopy[which];
-      heroLine1.textContent = c.line1;
-      heroSub.innerHTML = c.sub;
-      const musician = which === 'musician';
-      document.body.setAttribute('data-aud', which);
-      audThumb.style.transform = musician ? 'translateX(100%)' : 'translateX(0)';
-      audVenue.classList.toggle('text-white', !musician);
-      audVenue.classList.toggle('text-gray-500', musician);
-      audMusician.classList.toggle('text-white', musician);
-      audMusician.classList.toggle('text-gray-500', !musician);
-      audVenue.setAttribute('aria-selected', String(!musician));
-      audMusician.setAttribute('aria-selected', String(musician));
-    }
-    audVenue.addEventListener('click', () => setAudience('venue'));
-    audMusician.addEventListener('click', () => setAudience('musician'));
-
-    // Reveal on scroll
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    // Icons
-    lucide.createIcons();
-  </script>
-</body>
-</html>
+  </div></section>
+  <section id="signup" class="signup-section" aria-labelledby="signup-title"><div class="container signup-layout"><div class="signup-copy"><p class="signup-eyebrow">For Venues, Musicians &amp; Bands</p><h2 id="signup-title">Get Early Access<br>to CLEF.</h2><p>Join the list for CLEF updates and news about early access. Whether you book the room or bring the music, there’s a side for you.</p><p class="signup-expectation">We’ll email you when there’s news. Joining the list doesn’t create an app account.</p></div><div id="earlyAccess" data-signup-wizard data-page-role="">
+  <div class="signup-flow-header" data-signup-header hidden>
+    <div class="signup-flow-meta"><span>Early Access</span><p class="signup-progress" data-signup-progress role="status" aria-live="polite" aria-atomic="true">Step 1 of 3</p></div>
+    <div class="signup-track" aria-hidden="true"><span data-signup-marker="1"></span><span data-signup-marker="2"></span><span data-signup-marker="3"></span></div>
+  </div>
+  <div class="signup-wizard" hidden>
+    <section data-signup-step="1" aria-labelledby="signup-role-title"><h3 id="signup-role-title" tabindex="-1">How Will You Use CLEF?</h3><div class="signup-role-grid"><button type="button" data-signup-role="venue"><span class="signup-role-icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14M2 21h20M9 21v-6h6v6M8 8h1m6 0h1M8 11h1m6 0h1"/></svg></span><span class="signup-role-label">Venue / Booking Manager</span><span class="signup-role-arrow"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button><button type="button" data-signup-role="musician"><span class="signup-role-icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4m-4 0h8"/></svg></span><span class="signup-role-label">Musician</span><span class="signup-role-arrow"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button><button type="button" data-signup-role="band"><span class="signup-role-icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M6 21v-3a6 6 0 0 1 12 0v3M5 5a3 3 0 0 0 0 6m14-6a3 3 0 0 1 0 6M2 20v-3a4 4 0 0 1 2-3m18 6v-3a4 4 0 0 0-2-3"/></svg></span><span class="signup-role-label">Band</span><span class="signup-role-arrow"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button></div></section>
+    <section data-signup-step="2" aria-labelledby="signup-location-title" hidden>
+      <h3 id="signup-location-title" tabindex="-1">Where Are You Based?</h3>
+      <label for="signupLocation">City + State/Region</label>
+      <input id="signupLocation" data-signup-location type="text" maxlength="100" autocomplete="address-level2" enterkeyhint="next" aria-describedby="signup-location-error" placeholder="Pittsburgh, PA">
+      <p id="signup-location-error" class="signup-field-error" data-signup-error role="alert"></p>
+      <div class="signup-step-actions"><button type="button" data-signup-back><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m6-6-6 6 6 6"/></svg><span>Back</span></button><button type="button" data-signup-continue><span>Continue</span><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+    </section>
+  </div>
+  <div data-signup-final>
+    <div class="signup-final-heading"><h3 data-signup-final-title tabindex="-1">Join The List.</h3></div>
+    <div class="signup-summary" data-signup-summary hidden><p><strong data-signup-summary-role></strong><span data-signup-summary-location></span></p><button type="button" data-signup-edit aria-label="Change your role or city">Change</button></div>
+    <div id="kitSignup"><script async data-uid="c338b66b93" src="https://clef.kit.com/c338b66b93/index.js"></script></div>
+    <p id="signupFallback">Loading signup… If it does not appear, <a href="https://clef.kit.com/c338b66b93">open the signup form</a>.</p>
+    <p id="signupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    <p class="signup-divider">Or Use Google</p>
+    <button id="googleSignup" type="button" disabled aria-describedby="signupConsent signupStatus"><img src="/assets/google-g.svg" width="20" height="20" alt="">Sign up with Google</button>
+    <p id="signupConsent" class="signup-consent">By signing up, you agree to receive CLEF early-access emails through Kit. Unsubscribe anytime.</p>
+  </div>
+  <button class="signup-back-final" type="button" data-signup-back hidden><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m6-6-6 6 6 6"/></svg><span>Back</span></button>
+</div></div></section>
+</main><footer class="site-footer container">
+  <div class="footer-top"><a href="/" class="brand footer-brand" aria-label="CLEF Home"><img src="/assets/clefapp-logo.jpg" width="36" height="36" alt="">CLEF</a>
+    <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/venues/">For Venues</a><a href="/musicians/">For Musicians &amp; Bands</a><a href="/about/">About Us</a><a href="mailto:contact@clefapp.net">Contact</a></nav>
+  </div>
+  <div class="footer-bottom"><p>© 2026 CLEF. For the people behind live music.</p><nav aria-label="Social links">
+    <a href="https://www.instagram.com/clefappofficial/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.youtube.com/@CLEFAPP" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://x.com/clefofficial_" target="_blank" rel="noopener noreferrer">X</a><a href="https://www.tiktok.com/@clefapp" target="_blank" rel="noopener noreferrer">TikTok</a>
+  </nav><button class="motion-setting" type="button" data-video-toggle aria-label="Background Motion" aria-pressed="true" aria-controls="band-performance" hidden>Background Motion: On</button></div>
+</footer></body></html>

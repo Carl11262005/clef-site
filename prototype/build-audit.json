@@ -1,0 +1,15 @@
+{
+  "releaseCommit": "edf7d3dfd2845566aa49d20359e5411b826278ca",
+  "unpinnedApplicationModules": [],
+  "productionSdkModules": [],
+  "realScreensImported": true,
+  "sourceModules": 3689,
+  "networkAllowlist": [
+    "same-origin static assets",
+    "tiles.openfreemap.org"
+  ],
+  "data": "existing CLEF demo fixtures only",
+  "prototypeRepository": "https://github.com/Clef-App-LLc/clef-conference-demo",
+  "prototypeCommit": "1c8dca44ae18bac0a0d957af91eb260b10c733f7",
+  "websiteBase": "/prototype"
+}

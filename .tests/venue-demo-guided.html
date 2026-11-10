@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CLEF Guided Demo Checks</title><link rel="stylesheet" href="/assets/website.css"><link rel="stylesheet" href="/assets/venue-demo.css?v=20261015-static-guide"><style>body{padding:16px}#result{padding:16px;overflow-wrap:anywhere}#host{max-width:1120px;margin:auto}</style></head><body><p id="result">Running guided checks…</p><main id="host"></main><script type="module">
+const check=(ok,message)=>{if(!ok)throw Error(message);};
+const requests=[];
+async function run(){
+  const html=await (await fetch('/venues/',{cache:'no-store'})).text();
+  const page=new DOMParser().parseFromString(html,'text/html');
+  const source=page.querySelector('[data-venue-demo]');
+  check(page.querySelector('#benefits').compareDocumentPosition(source)&Node.DOCUMENT_POSITION_FOLLOWING,'Demo is after benefits');
+  check(source.compareDocumentPosition(page.querySelector('#signup'))&Node.DOCUMENT_POSITION_FOLLOWING,'Demo is before signup');
+  const root=document.importNode(source,true);root.removeAttribute('data-venue-demo');document.querySelector('#host').append(root);
+  const {initVenueDemo,renderVenueDemo}=await import(page.querySelector('script[src*="venue-demo.mjs"]').getAttribute('src'));
+  window.fetch=(...args)=>{requests.push(args);throw Error('Unexpected demo request');};
+  const controller=initVenueDemo(root,{now:()=>new Date(2026,9,9)});
+  check(controller&&initVenueDemo(root)===controller,'Idempotent initialization');
+  check(root.querySelector('[data-demo-action="start"]')?.offsetHeight>=44,'Usable Start control');
+  check(!root.querySelector('.venue-demo-app button:not(:disabled)'),'No app actions before Start');
+  const click=action=>{
+    const b=root.querySelector('[data-demo-action="'+action+'"]:not(:disabled)');
+    check(b&&!b.hidden,'Available '+action);b.focus();b.click();
+  };
+  click('start');
+  const steps=['open-calendar','select-day','open-date','select-night','confirm-date','open-pipeline',
+    'open-artist','accept-artist','open-message','send-message','open-terms',
+    'next-terms','next-terms','next-terms','next-terms','next-terms','next-terms',
+    'send-terms','simulate-acceptance'];
+  for(const action of steps){
+    const previous=root.querySelector('[data-demo-instruction]').textContent;
+    const target=root.querySelectorAll('[data-guide-target]');
+    check(target.length===1,'Exactly one highlighted target for '+action);
+    check(target[0].dataset.demoAction===action,'Correct highlighted target '+action);
+    const box=target[0].getBoundingClientRect();
+    check(box.width>=44&&box.height>=44,'44px guided touch target: '+action);
+    check(!root.querySelector('[data-demo-action="chapter"], [data-demo-action="next"]'),'No skip controls');
+    check(!root.querySelector('.venue-demo-app-tabs button'),'App tabs are visual context, not detours');
+    if(action==='send-message'){
+      const field=root.querySelector('[data-demo-draft]');
+      const set=value=>{field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));};
+      set(' ');root.querySelector('form').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+      check(controller.getState().error&&!controller.getState().done.message,'Empty message stays editable');
+      check(document.activeElement===root.querySelector('[data-demo-draft]'),'Error focuses field');
+      const valid=root.querySelector('[data-demo-draft]');valid.value='<img src=x onerror=alert(1)> Soundcheck at 7?';
+      valid.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    click(action);
+    check(root.querySelectorAll('[data-demo-active-screen]').length===1,'Only active screen available');
+    check(root.querySelector('[data-demo-instruction]').textContent!==previous,'Instruction advances after '+action);
+    check(document.activeElement!==document.body,'Focus survives '+action);
+    if(action==='send-message'){
+      controller.dispatch({type:'SEND_MESSAGE'});
+      check(root.querySelectorAll('.venue-demo-bubble-self').length===1,'No repeated message');
+      check(!root.querySelector('img[src=x]'),'Message text cannot inject markup');
+    }
+    if(action==='send-terms')check(!controller.getState().done.confirmed,'Sending is not acceptance');
+  }
+  check(controller.getState().done.confirmed,'Guided booking reaches confirmation');
+  check(!root.querySelector('[data-demo-signup]').hidden,'Signup shown at completion');
+  click('previous');check(controller.getState().screen==='chat','Back returns to conversation');
+  click('open-terms');check(controller.getState().screen==='confirmed','Confirmed details survive Back');
+  click('restart');check(!controller.getState().started,'Restart waits for new Start');
+  check(document.activeElement===root.querySelector('[data-demo-action="start"]'),'Restart focuses Start so keyboard users can replay');
+  check(Object.values(controller.getState().done).every(x=>!x),'Restart clears progress');
+  check(requests.length===0,'No demo network writes');
+  // Real rendering and focus recovery, with controlled failure at the I/O boundary.
+  controller.destroy();let renders=0;
+  const failing=initVenueDemo(root,{render:(...args)=>{const result=renderVenueDemo(...args);if(++renders>1)throw Error('Controlled render failure');return result;}});
+  click('start');
+  check(!root.querySelector('[data-demo-fallback]').hidden,'Render error restores fallback');
+  check(document.activeElement===root.querySelector('[data-demo-fallback] h2'),'Recovery keeps focus');
+  const preference=new EventTarget();preference.matches=true;
+  const reduced=initVenueDemo(root,{win:{matchMedia:()=>preference}});
+  click('start');click('open-calendar');
+  check(root.querySelector('[data-demo-active-screen]').getAnimations().length===0,'Reduced motion is immediate');
+  preference.matches=false;preference.dispatchEvent(new Event('change'));
+  click('select-day');
+  check(root.querySelector('[data-demo-active-screen]').getAnimations().length===1,'Screen change has one brief transition');
+  preference.matches=true;preference.dispatchEvent(new Event('change'));
+  check(root.querySelector('[data-demo-active-screen]').getAnimations().length===0,'Changing preference cancels transition');
+  for(const type of ['OPEN_DATE_SHEET','SELECT_NIGHT','CONFIRM_DATE','OPEN_PIPELINE','OPEN_ARTIST'])reduced.dispatch({type});
+  check(reduced.getState().screen==='artist','Rapid navigation renders latest state');
+  check(document.documentElement.scrollWidth<=innerWidth,'No page horizontal overflow');
+  document.querySelector('#result').textContent='PASS: placement, complete guided flow, gated actions, validation, no duplicate sends, focus, restart, recovery, rapid navigation, reduced motion, zero demo requests.';
+}
+run().catch(e=>{document.querySelector('#result').textContent='FAIL: '+e.message;});
+</script></body></html>

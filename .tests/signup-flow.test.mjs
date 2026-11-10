@@ -5,16 +5,17 @@ const moduleUrl = new URL('../assets/signup-flow.mjs', import.meta.url);
 const { createGoogleSignup } = existsSync(moduleUrl) ? await import(moduleUrl) : {};
 const verifiedUser = { email: 'listener@example.com', emailVerified: true, providerData: [{ providerId: 'google.com' }] };
 
-test('Google signup sends only the verified Google email and waits for Kit success', async () => {
+test('Google signup sends verified email with role and location and waits for Kit success', async () => {
   assert.equal(typeof createGoogleSignup, 'function');
   let finishKit; const sent = []; const messages = []; const busy = [];
   const run = createGoogleSignup({
     authenticate: async () => verifiedUser,
-    subscribe: email => { sent.push(email); return new Promise(resolve => { finishKit = resolve; }); },
+    getSignupDetails: () => ({role:'venue', location:'Pittsburgh, PA'}),
+    subscribe: profile => { sent.push(profile); return new Promise(resolve => { finishKit = resolve; }); },
     notify: message => messages.push(message), setBusy: value => busy.push(value),
   });
   const pending = run(); await new Promise(resolve => setImmediate(resolve));
-  assert.deepEqual(sent, ['listener@example.com']);
+  assert.deepEqual(sent, [{email:'listener@example.com', role:'venue', location:'Pittsburgh, PA'}]);
   assert.equal(busy.at(-1), true);
   assert.ok(!messages.some(m => m.includes('You’re on')));
   finishKit(); await pending;
@@ -23,10 +24,22 @@ test('Google signup sends only the verified Google email and waits for Kit succe
   await run(); assert.equal(sent.length, 1);
 });
 
+test('Google authentication never opens before required signup details are valid', async () => {
+  let signIns = 0; const messages = [];
+  const run = createGoogleSignup({
+    authenticate: async () => { signIns++; return verifiedUser; },
+    getSignupDetails: () => null,
+    subscribe: async () => {}, notify: message => messages.push(message), setBusy() {},
+  });
+  await run();
+  assert.equal(signIns, 0);
+  assert.match(messages.at(-1), /role and location/i);
+});
+
 test('repeated clicks during authentication do not start duplicate sign-ins', async () => {
   assert.equal(typeof createGoogleSignup, 'function');
   let finishAuth; let signIns = 0; let subscriptions = 0;
-  const run = createGoogleSignup({ authenticate: () => { signIns++; return new Promise(r => { finishAuth = r; }); }, subscribe: async () => { subscriptions++; }, notify() {}, setBusy() {} });
+  const run = createGoogleSignup({ authenticate: () => { signIns++; return new Promise(r => { finishAuth = r; }); }, getSignupDetails: () => ({}), subscribe: async () => { subscriptions++; }, notify() {}, setBusy() {} });
   const pending = run(); await run(); await run();
   assert.equal(signIns, 1); finishAuth(verifiedUser); await pending;
   assert.equal(subscriptions, 1);
@@ -36,7 +49,7 @@ test('unverified or non-Google identities cannot be subscribed through Google fl
   assert.equal(typeof createGoogleSignup, 'function');
   for (const user of [{...verifiedUser,emailVerified:false}, {...verifiedUser,email:null}, {...verifiedUser,providerData:[{providerId:'password'}]}]) {
     let subscribed = false; const messages = [];
-    const run = createGoogleSignup({ authenticate: async () => user, subscribe: async () => { subscribed = true; }, notify: m => messages.push(m), setBusy() {} });
+    const run = createGoogleSignup({ authenticate: async () => user, getSignupDetails: () => ({}), subscribe: async () => { subscribed = true; }, notify: m => messages.push(m), setBusy() {} });
     await run(); assert.equal(subscribed, false); assert.match(messages.at(-1), /verified Google email/);
   }
 });
@@ -45,7 +58,7 @@ test('cancelled or blocked Google popup leaves email signup available and suppor
   assert.equal(typeof createGoogleSignup, 'function');
   for (const code of ['auth/popup-closed-by-user','auth/popup-blocked','auth/unauthorized-domain']) {
     let attempts = 0; let subscriptions = 0; const messages = []; const busy = [];
-    const run = createGoogleSignup({ authenticate: async () => { if (!attempts++) throw {code}; return verifiedUser; }, subscribe: async () => { subscriptions++; }, notify: m => messages.push(m), setBusy: b => busy.push(b) });
+    const run = createGoogleSignup({ authenticate: async () => { if (!attempts++) throw {code}; return verifiedUser; }, getSignupDetails: () => ({}), subscribe: async () => { subscriptions++; }, notify: m => messages.push(m), setBusy: b => busy.push(b) });
     await run(); assert.equal(subscriptions, 0); assert.equal(busy.at(-1), false); assert.match(messages.at(-1), /email/i);
     await run(); assert.equal(subscriptions, 1);
   }
@@ -54,7 +67,7 @@ test('cancelled or blocked Google popup leaves email signup available and suppor
 test('Kit errors never report successful signup and can be retried', async () => {
   assert.equal(typeof createGoogleSignup, 'function');
   let attempts = 0; const messages = [];
-  const run = createGoogleSignup({ authenticate: async () => verifiedUser, subscribe: async () => { if (!attempts++) throw new Error('Signup service is unavailable. Please try email signup.'); }, notify: m => messages.push(m), setBusy() {} });
+  const run = createGoogleSignup({ authenticate: async () => verifiedUser, getSignupDetails: () => ({}), subscribe: async () => { if (!attempts++) throw new Error('Signup service is unavailable. Please try email signup.'); }, notify: m => messages.push(m), setBusy() {} });
   await run(); assert.ok(!messages.some(m => m.includes('You’re on')));
   assert.match(messages.at(-1), /unavailable/); await run(); assert.match(messages.at(-1), /You’re on/);
 });

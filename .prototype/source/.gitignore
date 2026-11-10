@@ -1,0 +1,7 @@
+node_modules/
+web-deps/node_modules/
+output/
+.expo/
+
+.source/
+.generated/
