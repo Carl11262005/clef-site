@@ -47,8 +47,13 @@ Publishing
 ----------
 Hosting is Firebase project/site clef-app. The existing GitHub Actions workflow
 publishes pushes to main. Verify its run after a push; a pushed commit by itself
-is not deployment proof. If the configured deployment service account lacks
-permission, the workflow will fail until its owner repairs that access.
+is not deployment proof.
+
+The existing GitHub deployment service account uses Firebase Hosting Admin plus
+projects/clef-app/roles/githubHostingServiceCheck. That custom role contains only
+serviceusage.services.get, which the deployment CLI needs to check that the
+Hosting API is enabled. Credentials remain in the existing GitHub repository
+secret; do not commit service-account keys to this repository.
 
 An authorized maintainer with an existing Firebase CLI login can publish the
 exact committed snapshot using:
